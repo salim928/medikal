@@ -18,6 +18,7 @@ export default function ProviderProfilePage() {
   const provider = getProvider(params.id as string);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [appointmentId, setAppointmentId] = useState("");
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
@@ -40,6 +41,7 @@ export default function ProviderProfilePage() {
       toast.error('Please select a date and time');
       return;
     }
+    setAppointmentId(`APT-${Date.now()}`);
     setShowPaymentModal(true);
   };
 
@@ -244,7 +246,7 @@ export default function ProviderProfilePage() {
           userId={user?.id ?? 'demo-user'}
           userEmail={user?.email ?? 'demo@medicom.app'}
           metadata={{
-            appointmentId: `APT-${Date.now()}`,
+            appointmentId,
             doctorName: provider.name,
           }}
           onSuccess={handlePaymentSuccess}

@@ -65,6 +65,21 @@ const defaultPreferences: NotificationPreferences = {
   },
 };
 
+const Switch = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) => (
+  <button
+    onClick={onToggle}
+    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+      enabled ? 'bg-brand-600' : 'bg-mist'
+    }`}
+  >
+    <span
+      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+        enabled ? 'translate-x-6' : 'translate-x-1'
+      }`}
+    />
+  </button>
+);
+
 export default function NotificationPreferencesPage() {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
@@ -155,20 +170,7 @@ export default function NotificationPreferencesPage() {
     });
   };
 
-  const Switch = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) => (
-    <button
-      onClick={onToggle}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-        enabled ? 'bg-brand-600' : 'bg-mist'
-      }`}
-    >
-      <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          enabled ? 'translate-x-6' : 'translate-x-1'
-        }`}
-      />
-    </button>
-  );
+
 
   return (
     <div className="space-y-6 max-w-4xl">

@@ -9,7 +9,7 @@
  *   toast.error("Something went wrong");
  *   toast.info("Feature not available in the demo");
  */
-import { createContext, useCallback, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, XCircle, Info, X } from "lucide-react";
 
@@ -52,18 +52,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     [dismiss]
   );
 
-  const api = useRef<ToastApi>({
-    success: (m) => push("success", m),
-    error: (m) => push("error", m),
-    info: (m) => push("info", m),
-  });
-  // Keep the stable ref pointing at the latest push
-  api.current.success = (m) => push("success", m);
-  api.current.error = (m) => push("error", m);
-  api.current.info = (m) => push("info", m);
+  const api = useMemo<ToastApi>(
+    () => ({
+      success: (m) => push("success", m),
+      error: (m) => push("error", m),
+      info: (m) => push("info", m),
+    }),
+    [push]
+  );
 
   return (
-    <ToastContext.Provider value={api.current}>
+    <ToastContext.Provider value={api}>
       {children}
       <div className="pointer-events-none fixed bottom-4 right-4 z-[100] flex w-full max-w-sm flex-col gap-2">
         <AnimatePresence>

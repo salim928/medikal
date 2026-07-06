@@ -22,7 +22,7 @@ export const Alert: React.FC<AlertProps> = ({ children, variant = "default", cla
   );
 };
 
-export interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type AlertDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
 
 export const AlertDescription: React.FC<AlertDescriptionProps> = ({ children, className, ...props }) => (
   <p className={`text-sm mt-2 ${className || ""}`} {...props}>{children}</p>
