@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FileText, Download, Eye, User, Share2, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -18,6 +18,7 @@ export default function RecordViewerPage() {
   const record = getMedicalRecord(id);
 
   const isProvider = role !== "patient";
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -28,10 +29,14 @@ export default function RecordViewerPage() {
   const handleDownload = () => toast.info("Download started (demo)");
   const handleShare = () => toast.success("Record shared with your care team");
   const handleDelete = () => {
-    if (confirm("Are you sure you want to delete this record? This action cannot be undone.")) {
-      toast.success("Record deleted");
-      router.push("/records");
+    if (!confirmingDelete) {
+      // Two-step confirmation: first click arms, second click deletes.
+      setConfirmingDelete(true);
+      toast.info("Click Delete again to permanently remove this record");
+      return;
     }
+    toast.success("Record deleted");
+    router.push("/records");
   };
 
   if (loading) {
@@ -199,7 +204,7 @@ export default function RecordViewerPage() {
               </Button>
               <Button onClick={handleDelete} className="bg-red-500 hover:bg-red-600">
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete record
+                {confirmingDelete ? "Confirm delete" : "Delete record"}
               </Button>
             </>
           )}

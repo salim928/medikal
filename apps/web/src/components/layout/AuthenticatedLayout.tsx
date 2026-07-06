@@ -14,6 +14,8 @@ export function AuthenticatedLayout({ children }: { children: React.ReactNode })
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
+    // Restore persisted sidebar state after hydration (SSR has no localStorage).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCollapsed(localStorage.getItem("mc-sidebar-collapsed") === "1");
   }, []);
 

@@ -3,7 +3,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useUserStore } from "@/stores/useUserStore";
@@ -32,6 +31,8 @@ export default function ProfileSettingsPage() {
 
   useEffect(() => {
     if (user) {
+      // Prefill the form once the session resolves (async source → state).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         fullName:
           (user.user_metadata?.full_name as string) ||

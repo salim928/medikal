@@ -84,10 +84,10 @@ export default function Error({
           </p>
           <div className="flex flex-wrap gap-3 justify-center text-sm">
             <a
-              href="mailto:support@mediconnect.com"
+              href="mailto:support@medicom.app"
               className="text-brand-600 hover:text-brand-700"
             >
-              support@mediconnect.com
+              support@medicom.app
             </a>
             <span className="text-slate-600">•</span>
             <a

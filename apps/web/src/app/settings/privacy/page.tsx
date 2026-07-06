@@ -73,7 +73,7 @@ export default function PrivacySettingsPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       setAlert({ type: 'success', message: 'Privacy settings saved successfully' });
-    } catch (error) {
+    } catch {
       setAlert({ type: 'error', message: 'Failed to save settings. Please try again.' });
     } finally {
       setIsSaving(false);
@@ -85,7 +85,7 @@ export default function PrivacySettingsPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       setAlert({ type: 'success', message: 'Your data export has been initiated. You will receive an email when it\'s ready.' });
-    } catch (error) {
+    } catch {
       setAlert({ type: 'error', message: 'Failed to initiate data export. Please try again.' });
     }
   };
@@ -102,7 +102,7 @@ export default function PrivacySettingsPage() {
       setAlert({ type: 'success', message: 'Your account deletion request has been submitted. You will receive a confirmation email.' });
       setShowDeleteConfirm(false);
       setDeleteConfirmText('');
-    } catch (error) {
+    } catch {
       setAlert({ type: 'error', message: 'Failed to delete account. Please contact support.' });
     }
   };

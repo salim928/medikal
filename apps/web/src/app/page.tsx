@@ -1,8 +1,8 @@
 import Link from "next/link";
 import {
   ArrowRight, Play, Video, Pill, FlaskConical, HeartPulse, ShieldCheck, Clock,
-  Stethoscope, Brain, User, Baby, Activity, PlusCircle, Check, Star, ChevronLeft,
-  ChevronRight, MapPin, DollarSign, Lock, Award, Smartphone, Phone, MessageSquare,
+  Brain, User, Baby, Activity, PlusCircle, Check, Star, ChevronLeft,
+  ChevronRight, MapPin, DollarSign, Lock, Smartphone, Phone, MessageSquare,
   ClipboardList, Users, Facebook, Twitter, Instagram, Linkedin, Youtube,
 } from "lucide-react";
 

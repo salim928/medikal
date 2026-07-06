@@ -118,3 +118,62 @@ test.describe("doctor routes", () => {
     await expect(page.getByText(/Review complete/i).first()).toBeVisible();
   });
 });
+
+test.describe("interactive feature flows (patient)", () => {
+  test.beforeEach(async ({ context }) => {
+    await context.addCookies([demoCookie("patient")]);
+  });
+
+  test("verify-drug authenticates a genuine batch and flags a fake", async ({ page }) => {
+    await page.goto("/verify-drug");
+    await page.fill('input[placeholder*="FDA-AMX"]', "FDA-AMX-2024-001");
+    await page.click('button:has-text("Verify")');
+    await expect(page.getByText(/Amoxicillin 500mg/).first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/Authentic/).first()).toBeVisible();
+
+    await page.fill('input[placeholder*="FDA-AMX"]', "FAKE-123-456");
+    await page.click('button:has-text("Verify")');
+    await expect(page.getByText(/Counterfeit/).first()).toBeVisible({ timeout: 15000 });
+  });
+
+  test("notifications: mark read decrements unread count", async ({ page }) => {
+    await page.goto("/notifications");
+    await expect(page.getByText(/unread notification/).first()).toBeVisible();
+    await page.locator('button:has-text("Mark Read")').first().click();
+    await expect(page.getByText(/1 unread notification|All caught up/).first()).toBeVisible();
+  });
+
+  test("pharmacy order shows confirmation toast", async ({ page }) => {
+    await page.goto("/pharmacies");
+    await page.locator('button:has-text("Order Prescription")').first().click();
+    await expect(page.getByText(/order sent to/i).first()).toBeVisible();
+  });
+
+  test("subscriptions billing toggle updates prices", async ({ page }) => {
+    await page.goto("/subscriptions");
+    await expect(page.getByText("GH₵ 99").first()).toBeVisible();
+    await page.click('button:has-text("Yearly")');
+    await expect(page.getByText("GH₵ 999").first()).toBeVisible();
+  });
+
+  test("settings profile edit + save shows toast", async ({ page }) => {
+    await page.goto("/settings/profile");
+    await page.click('button:has-text("Edit Profile")');
+    await page.click('button:has-text("Save Changes")');
+    await expect(page.getByText("Profile updated").first()).toBeVisible();
+  });
+});
+
+test.describe("other role dashboards", () => {
+  for (const role of ["nurse", "midwife", "lawyer"] as const) {
+    test(`renders /dashboard/${role}`, async ({ browser }) => {
+      const ctx = await browser.newContext();
+      await ctx.addCookies([demoCookie(role)]);
+      const page = await ctx.newPage();
+      await page.goto(`/dashboard/${role}`);
+      await expect(page.getByText(/Good (morning|afternoon|evening)/).first()).toBeVisible({ timeout: 20000 });
+      await expect(page.getByText("Something Went Wrong")).toHaveCount(0);
+      await ctx.close();
+    });
+  }
+});

@@ -3,15 +3,25 @@
  * Primary payment gateway for Ghana market
  */
 
+/** Shape of the transaction object Paystack hands back on success. */
+export interface PaystackTransaction {
+  reference: string;
+  status?: string;
+  trans?: string;
+  transaction?: string;
+  message?: string;
+  [key: string]: unknown;
+}
+
 export interface PaystackConfig {
   publicKey: string;
   email: string;
   amount: number; // Amount in kobo (GHS 100 = 10000 kobo)
   currency?: string;
   reference?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   channels?: string[];
-  onSuccess: (response: any) => void;
+  onSuccess: (response: PaystackTransaction) => void;
   onClose: () => void;
 }
 
@@ -21,7 +31,7 @@ export interface PaymentDetails {
   currency: string;
   userId: string;
   userEmail: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 // Get Paystack public key from environment
@@ -68,7 +78,7 @@ export const initializePaystackPayment = async (
       ref: config.reference || generatePaymentReference(),
       metadata: config.metadata,
       channels: config.channels || ['card', 'mobile_money', 'bank', 'ussd'],
-      onSuccess: (transaction: any) => {
+      onSuccess: (transaction: PaystackTransaction) => {
         console.log('Payment successful:', transaction);
         config.onSuccess(transaction);
       },
@@ -90,7 +100,7 @@ export const processConsultationPayment = async (details: {
   userId: string;
   appointmentId: string;
   doctorName: string;
-  onSuccess: (transaction: any) => void;
+  onSuccess: (transaction: PaystackTransaction) => void;
   onClose: () => void;
 }): Promise<void> => {
   const config: PaystackConfig = {
@@ -131,7 +141,7 @@ export const processSubscriptionPayment = async (details: {
   userId: string;
   planName: string;
   planType: 'monthly' | 'yearly';
-  onSuccess: (transaction: any) => void;
+  onSuccess: (transaction: PaystackTransaction) => void;
   onClose: () => void;
 }): Promise<void> => {
   const config: PaystackConfig = {
@@ -172,7 +182,7 @@ export const processPrescriptionPayment = async (details: {
   userId: string;
   prescriptionId: string;
   pharmacyName: string;
-  onSuccess: (transaction: any) => void;
+  onSuccess: (transaction: PaystackTransaction) => void;
   onClose: () => void;
 }): Promise<void> => {
   const config: PaystackConfig = {
@@ -207,7 +217,7 @@ export const processPrescriptionPayment = async (details: {
 };
 
 // Verify payment on backend
-export const verifyPayment = async (reference: string): Promise<any> => {
+export const verifyPayment = async (reference: string): Promise<unknown> => {
   try {
     const response = await fetch('/api/payments/verify', {
       method: 'POST',
@@ -234,7 +244,7 @@ export const initializeMobileMoney = async (details: {
   userEmail: string;
   phoneNumber: string;
   provider: 'mtn' | 'vodafone' | 'airteltigo';
-  onSuccess: (transaction: any) => void;
+  onSuccess: (transaction: PaystackTransaction) => void;
   onClose: () => void;
 }): Promise<void> => {
   const config: PaystackConfig = {
@@ -256,7 +266,7 @@ export const initializeMobileMoney = async (details: {
   await initializePaystackPayment(config);
 };
 
-export default {
+const paystack = {
   initializePaystackPayment,
   processConsultationPayment,
   processSubscriptionPayment,
@@ -268,3 +278,5 @@ export default {
   fromKobo,
   getPaystackPublicKey,
 };
+
+export default paystack;

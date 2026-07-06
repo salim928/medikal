@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/auth-fresh";
 import {
-  Calendar, FileText, Video, Pill, FlaskConical, MessageSquare, HeartPulse,
-  ShieldCheck, PlusCircle, Brain, User, Baby, Activity, Clock, ArrowRight, Check,
+  FileText, Video, Pill, FlaskConical, MessageSquare, HeartPulse,
+  Activity, Clock, ArrowRight, 
 } from "lucide-react";
 import {
   WelcomeBanner, BannerButton, StatCard, Panel, QuickAction, PersonRow, ActivityFeed, DashboardSkeleton,

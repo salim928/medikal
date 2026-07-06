@@ -137,7 +137,7 @@ export const confirmStripePayment = async (
   stripe: Stripe,
   clientSecret: string,
   elements: StripeElements
-): Promise<any> => {
+): Promise<{ error?: unknown }> => {
   try {
     const result = await stripe.confirmPayment({
       elements,
@@ -194,7 +194,7 @@ export const redirectToCheckout = async (sessionId: string): Promise<void> => {
 
   // redirectToCheckout was removed from @stripe/stripe-js types but still exists at
   // runtime. Cast preserves behavior; prefer server-returned Checkout `url` long-term.
-  const { error } = await (stripe as any).redirectToCheckout({ sessionId });
+  const { error } = await (stripe as unknown as { redirectToCheckout: (o: { sessionId: string }) => Promise<{ error?: unknown }> }).redirectToCheckout({ sessionId });
   if (error) {
     console.error('Redirect error:', error);
     throw error;
@@ -204,7 +204,7 @@ export const redirectToCheckout = async (sessionId: string): Promise<void> => {
 // Retrieve payment intent status
 export const retrievePaymentIntent = async (
   paymentIntentId: string
-): Promise<any> => {
+): Promise<unknown> => {
   try {
     const response = await fetch(
       `/api/payments/stripe/retrieve-intent/${paymentIntentId}`,
@@ -235,7 +235,7 @@ export const formatAmount = (amount: number, currency: string): string => {
   }).format(amount);
 };
 
-export default {
+const stripeHelpers = {
   getStripe,
   createPaymentIntent,
   processStripeConsultationPayment,
@@ -248,3 +248,5 @@ export default {
   formatAmount,
   getStripePublishableKey,
 };
+
+export default stripeHelpers;

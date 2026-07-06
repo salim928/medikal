@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Users, Activity, UserPlus, CalendarClock, MessageSquare,
-  FileText, Phone, Mail, ChevronRight,
+  Phone, ChevronRight,
 } from "lucide-react";
 import { StatCard, Panel, DashboardSkeleton } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";

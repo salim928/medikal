@@ -2,7 +2,6 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { securitySessions, type SecuritySession } from "@/lib/data";
-import { useToast } from "@/components/ui/toast";
 import { PageSpinner } from "@/components/ui/Spinner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { User } from "@supabase/supabase-js";
 
 interface UserProfile {
   id: string;

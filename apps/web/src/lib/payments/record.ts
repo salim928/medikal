@@ -15,7 +15,7 @@ export interface PaymentRecord {
   appointmentId?: string | null;
   subscriptionPlan?: string | null;
   channel?: string | null;
-  metadata?: Record<string, any> | null;
+  metadata?: Record<string, unknown> | null;
   paidAt?: string | null;
 }
 

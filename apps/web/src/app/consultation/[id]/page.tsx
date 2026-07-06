@@ -13,7 +13,7 @@ import {
   Phone, 
   Monitor, 
   MessageSquare,
-  Settings,
+  
   Users,
   Clock,
   FileText,
@@ -46,7 +46,7 @@ export default function VideoConsultationPage() {
 
   // Media states
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [remoteStream] = useState<MediaStream | null>(null);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [speakerEnabled, setSpeakerEnabled] = useState(true);
@@ -111,6 +111,8 @@ export default function VideoConsultationPage() {
         localStream.getTracks().forEach(track => track.stop());
       }
     };
+    // Mount-only media setup/teardown; localStream is set inside this effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Duration timer
@@ -152,10 +154,8 @@ export default function VideoConsultationPage() {
   const toggleScreenShare = async () => {
     try {
       if (!isScreenSharing) {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({
-          video: true
-        });
-        // In real implementation, would share this stream via WebRTC
+        await navigator.mediaDevices.getDisplayMedia({ video: true });
+        // In a real implementation the captured stream is shared via WebRTC
         setIsScreenSharing(true);
       } else {
         setIsScreenSharing(false);

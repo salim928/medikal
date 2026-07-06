@@ -55,16 +55,31 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ received: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Webhook error:', error);
     return NextResponse.json(
-      { error: 'Webhook processing failed', message: error.message },
+      { error: 'Webhook processing failed', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
 }
 
-async function handleChargeSuccess(data: any) {
+interface PaystackChargeData {
+  reference: string;
+  amount: number;
+  currency: string;
+  channel?: string;
+  paid_at?: string;
+  metadata?: {
+    userId?: string;
+    type?: string;
+    appointmentId?: string;
+    planName?: string;
+    [key: string]: unknown;
+  };
+}
+
+async function handleChargeSuccess(data: PaystackChargeData) {
   const meta = data.metadata || {};
   await recordPayment({
     provider: 'paystack',
@@ -82,12 +97,12 @@ async function handleChargeSuccess(data: any) {
   });
 }
 
-async function handleTransferSuccess(data: any) {
+async function handleTransferSuccess(data: Record<string, unknown>) {
   console.log('Transfer successful:', data);
   // Handle successful transfer to provider
 }
 
-async function handleTransferFailed(data: any) {
+async function handleTransferFailed(data: Record<string, unknown>) {
   console.log('Transfer failed:', data);
   // Handle failed transfer
 }

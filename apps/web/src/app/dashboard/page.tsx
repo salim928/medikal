@@ -2,23 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useEffect } from "react";
-import { 
-  Stethoscope, 
-  Activity, 
-  Calendar, 
-  TrendingUp, 
-  Users, 
-  FileText, 
-  Video, 
-  Pill, 
-  CheckCircle, 
-  Clock, 
-  AlertCircle, 
-  Brain, 
-  Search 
-} from "lucide-react";
 
 export default function DashboardPage() {
   const { user, role, isAuthenticated, loading } = useAuth();

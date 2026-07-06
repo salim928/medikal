@@ -10,9 +10,9 @@ import {
   Calendar,
   Video,
   FileText,
-  CreditCard,
-  Shield,
-  Users,
+  
+  
+  
   MessageSquare,
   Phone,
   Mail
@@ -287,8 +287,8 @@ export default function HelpPage() {
             <div className="bg-white rounded-lg p-6 text-center">
               <Mail className="w-8 h-8 text-brand-600 mx-auto mb-3" />
               <h3 className="font-semibold text-ink mb-2">Email Support</h3>
-              <a href="mailto:support@mediconnect.com" className="text-brand-600 hover:text-brand-700 break-all">
-                support@mediconnect.com
+              <a href="mailto:support@medicom.app" className="text-brand-600 hover:text-brand-700 break-all">
+                support@medicom.app
               </a>
               <p className="text-sm text-slate-500 mt-2">Response within 24 hours</p>
             </div>

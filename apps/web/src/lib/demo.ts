@@ -34,7 +34,7 @@ export function demoUser(role: DemoRole) {
   const name = `Demo ${role.charAt(0).toUpperCase()}${role.slice(1)}`;
   return {
     id: `demo-${role}`,
-    email: `${role}@mediconnect.demo`,
+    email: `${role}@medicom.demo`,
     user_metadata: { role, full_name: name, name },
     app_metadata: { provider: "demo" },
     aud: "authenticated",

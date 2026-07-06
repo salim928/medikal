@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { lookupDrug, type DrugInfo } from '@/lib/data';
 import { useToast } from '@/components/ui/toast';
 

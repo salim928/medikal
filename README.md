@@ -1,6 +1,6 @@
 # medicom
 
-A modern telehealth platform for the Ghanaian market: secure video visits, AI-assisted triage, e-prescriptions, verified pharmacies, and Ghana-FDA drug authentication — built with Next.js 16, React 19, Tailwind CSS, and a dark-blue/white design system.
+A modern telehealth platform for the Ghanaian market: secure video visits, AI-assisted triage, e-prescriptions, verified pharmacies, and Ghana-FDA drug authentication — built with Next.js 16, React 19, Tailwind CSS, and a warm brown-and-white design system.
 
 > **Demo mode** — the app currently runs fully self-contained with no backend. Every screen works against a typed in-app data layer, and interactive flows (booking, cancelling, notifications) persist locally. See [Architecture](#architecture) for how a real backend plugs in.
 
@@ -61,8 +61,8 @@ Stripe and Paystack integrations exist and initialize lazily — API routes retu
 
 ## Design system
 
-- **Navy** (`#0B1B3A` family) — sidebar, landing hero, welcome banners, footer
-- **White** surfaces with `blue-600` primary actions
+- **Espresso** (`#2B1D10` family) — sidebar, welcome banners, dark anchors
+- **White / warm cream** surfaces with brown (`#8A5A2E`) primary actions
 - Shared status tokens (`lib/ui/status.ts`) keep badges accessible (no light-on-white text)
 - Toasts (`components/ui/toast.tsx`) replace every blocking `alert()`
 
@@ -79,5 +79,5 @@ Earlier iterations included an Express/Drizzle API and DB workspace (removed in 
 
 - Data is per-browser (localStorage) — "Reset demo data" is available via `resetDemoData()` in the store.
 - Video consultations render the call UI without a live WebRTC backend.
-- AI symptom analysis and drug interactions are simulated; `lib/openai.ts` is ready for a key.
+- AI symptom analysis and drug interactions are simulated in the UI (no LLM calls).
 - Password reset simulates success when no auth backend is configured.

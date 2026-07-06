@@ -171,7 +171,7 @@ export default function PrivacyPolicyPage() {
               <p>For privacy-related questions or concerns:</p>
               <div className="bg-white/80 border border-slate-200 rounded-lg p-4 mt-3 space-y-2">
                 <p><strong>Privacy Officer:</strong></p>
-                <p>Email: <a href="mailto:privacy@mediconnect.com" className="text-brand-600 hover:text-brand-700">privacy@mediconnect.com</a></p>
+                <p>Email: <a href="mailto:privacy@medicom.app" className="text-brand-600 hover:text-brand-700">privacy@medicom.app</a></p>
                 <p>Phone: <a href="tel:+1-555-PRIVACY" className="text-brand-600 hover:text-brand-700">1-555-PRIVACY</a></p>
                 <p>Address: medicom Privacy Office, 123 Healthcare Blvd, Suite 500, San Francisco, CA 94102</p>
               </div>

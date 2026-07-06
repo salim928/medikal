@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import {
-  Calendar, Clock, Video, MapPin, ArrowLeft, PlusCircle, Brain, User, Baby,
-  Activity, HeartPulse, Check,
+  Calendar, Clock, Video, MapPin, 
+  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { careServices as services, providerOptions, consultTimes as times } from "@/lib/data";

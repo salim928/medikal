@@ -4,24 +4,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import {
-  Calendar, Scale, FileText, Activity, Briefcase, Gavel,
-  Clock, ShieldCheck, MessageSquare, FileSignature,
+  Calendar, Scale, FileText, Briefcase, Gavel,
+  ShieldCheck, MessageSquare, FileSignature,
 } from "lucide-react";
 import {
   WelcomeBanner, BannerButton, StatCard, Panel, QuickAction, PersonRow, ActivityFeed, DashboardSkeleton,
 } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";
+import { lawyerConsults as consults, lawyerCases as cases } from "@/lib/data";
 
-const consults = [
-  { initials: "PM", name: "Patient — M. Addo", reason: "Consent & data-rights review", time: "10:00 AM", tag: "Consult" },
-  { initials: "CL", name: "City Clinic Ltd.", reason: "Malpractice case review", time: "1:00 PM", tag: "Case" },
-  { initials: "HR", name: "HR — MedGroup", reason: "Compliance advisory", time: "3:30 PM", tag: "Advisory" },
-];
 
-const cases = [
-  { initials: "CL", name: "City Clinic — Negligence claim", note: "Discovery phase", level: "Active" },
-  { initials: "RX", name: "Rx dispute — Pharmacy A", note: "Awaiting documents", level: "Pending" },
-];
 
 const activity = [
   { icon: FileSignature, text: "Reviewed consent form — M. Addo", time: "25m ago" },

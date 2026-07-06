@@ -30,7 +30,7 @@ export async function signUp(
   password: string,
   role: UserRole,
   fullName: string,
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 ): Promise<AuthResult> {
   try {
     const { data, error } = await supabase.auth.signUp({
@@ -228,7 +228,7 @@ export async function updatePassword(
  * Update user metadata
  */
 export async function updateUserMetadata(
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
 ): Promise<{ error: AuthError | null }> {
   try {
     const { error } = await supabase.auth.updateUser({

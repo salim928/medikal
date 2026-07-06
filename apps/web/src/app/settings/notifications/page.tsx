@@ -111,7 +111,7 @@ export default function NotificationPreferencesPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       setAlert({ type: 'success', message: 'Notification preferences saved successfully' });
-    } catch (error) {
+    } catch {
       setAlert({ type: 'error', message: 'Failed to save preferences. Please try again.' });
     } finally {
       setIsSaving(false);

@@ -265,7 +265,7 @@ export default function TermsPage() {
               <p>For questions about these Terms:</p>
               <div className="bg-white/80 border border-slate-200 rounded-lg p-4 mt-3 space-y-2">
                 <p><strong>Legal Department:</strong></p>
-                <p>Email: <a href="mailto:legal@mediconnect.com" className="text-brand-600 hover:text-brand-700">legal@mediconnect.com</a></p>
+                <p>Email: <a href="mailto:legal@medicom.app" className="text-brand-600 hover:text-brand-700">legal@medicom.app</a></p>
                 <p>Phone: <a href="tel:+1-555-MEDICAL" className="text-brand-600 hover:text-brand-700">1-555-MEDICAL</a></p>
                 <p>Address: medicom, Inc., 123 Healthcare Blvd, Suite 500, San Francisco, CA 94102</p>
               </div>

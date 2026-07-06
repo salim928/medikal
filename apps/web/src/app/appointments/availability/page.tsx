@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Calendar, Clock, Plus, Trash2 } from "lucide-react";
+import { Clock, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 import { PageSpinner } from "@/components/ui/Spinner";
 

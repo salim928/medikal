@@ -11,17 +11,9 @@ import {
   WelcomeBanner, BannerButton, StatCard, Panel, QuickAction, PersonRow, ActivityFeed, DashboardSkeleton,
 } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";
+import { nurseRounds as rounds, nurseTasks as tasks } from "@/lib/data";
 
-const rounds = [
-  { initials: "AB", name: "Akosua Boateng", reason: "Vitals check · Ward B", time: "8:30 AM" },
-  { initials: "KM", name: "Kofi Mensah", reason: "Wound dressing", time: "9:45 AM" },
-  { initials: "EN", name: "Efua Nyarko", reason: "Medication round", time: "11:00 AM" },
-];
 
-const tasks = [
-  { initials: "TA", name: "Record vitals — Bed 12", note: "Due in 15 min", level: "Due" },
-  { initials: "SG", name: "Administer meds — Bed 7", note: "Scheduled 11:00", level: "Upcoming" },
-];
 
 const activity = [
   { icon: Thermometer, text: "Logged vitals for A. Boateng", time: "10m ago" },

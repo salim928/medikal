@@ -6,7 +6,8 @@ import {
   processSubscriptionPayment,
   processPrescriptionPayment,
   initializeMobileMoney,
-  fromKobo,
+  
+  type PaystackTransaction,
 } from '@/lib/paystack';
 import {
   processStripeConsultationPayment,
@@ -33,12 +34,12 @@ interface PaymentModalProps {
     prescriptionId?: string;
     pharmacyName?: string;
   };
-  onSuccess: (transaction: any) => void;
+  onSuccess: (transaction: PaystackTransaction) => void;
 }
 
 // Stripe Payment Form Component
 function StripePaymentForm({ 
-  clientSecret, 
+  
   onSuccess, 
   onError 
 }: { 
@@ -73,8 +74,8 @@ function StripePaymentForm({
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
         onSuccess();
       }
-    } catch (err: any) {
-      onError(err.message || 'Payment processing error');
+    } catch (err) {
+      onError(err instanceof Error ? err.message : 'Payment processing error');
     } finally {
       setIsProcessing(false);
     }
@@ -128,7 +129,7 @@ export default function PaymentModal({
         amount,
         userEmail,
         userId,
-        onSuccess: (transaction: any) => {
+        onSuccess: (transaction: PaystackTransaction) => {
           setIsProcessing(false);
           onSuccess(transaction);
           onClose();
@@ -161,8 +162,8 @@ export default function PaymentModal({
           });
           break;
       }
-    } catch (err: any) {
-      setError(err.message || 'Payment initialization failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Payment initialization failed');
       setIsProcessing(false);
     }
   };
@@ -182,7 +183,7 @@ export default function PaymentModal({
         userEmail,
         phoneNumber,
         provider: mobileMoneyProvider,
-        onSuccess: (transaction: any) => {
+        onSuccess: (transaction: PaystackTransaction) => {
           setIsProcessing(false);
           onSuccess(transaction);
           onClose();
@@ -191,8 +192,8 @@ export default function PaymentModal({
           setIsProcessing(false);
         },
       });
-    } catch (err: any) {
-      setError(err.message || 'Mobile money payment failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Mobile money payment failed');
       setIsProcessing(false);
     }
   };
@@ -236,8 +237,8 @@ export default function PaymentModal({
       }
 
       setStripeClientSecret(result.clientSecret);
-    } catch (err: any) {
-      setError(err.message || 'Payment initialization failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Payment initialization failed');
       setIsProcessing(false);
     }
   };
@@ -396,7 +397,7 @@ export default function PaymentModal({
             </label>
             <select
               value={mobileMoneyProvider}
-              onChange={(e) => setMobileMoneyProvider(e.target.value as any)}
+              onChange={(e) => setMobileMoneyProvider(e.target.value as 'mtn' | 'vodafone' | 'airteltigo')}
               className="w-full bg-canvas border border-slate-200 rounded-lg px-4 py-3 text-ink focus:ring-2 focus:ring-brand-500 focus:border-transparent"
             >
               <option value="mtn">MTN Mobile Money</option>
@@ -421,7 +422,7 @@ export default function PaymentModal({
               <StripePaymentForm
                 clientSecret={stripeClientSecret}
                 onSuccess={() => {
-                  onSuccess({ paymentMethod: 'stripe' });
+                  onSuccess({ reference: `STRIPE-${Date.now()}`, paymentMethod: 'stripe' });
                   onClose();
                 }}
                 onError={(err) => setError(err)}

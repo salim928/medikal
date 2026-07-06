@@ -4,24 +4,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import {
-  Calendar, Users, FileText, Activity, Baby, HeartPulse,
-  Clock, Stethoscope, ClipboardList, Pill,
+  Calendar, Users, FileText, Baby, HeartPulse,
+  ClipboardList, Pill,
 } from "lucide-react";
 import {
   WelcomeBanner, BannerButton, StatCard, Panel, QuickAction, PersonRow, ActivityFeed, DashboardSkeleton,
 } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";
+import { midwifeVisits as visits, midwifeDue as due } from "@/lib/data";
 
-const visits = [
-  { initials: "AO", name: "Ama Owusu", reason: "Antenatal · 28 weeks", time: "9:00 AM", tag: "Antenatal" },
-  { initials: "GD", name: "Grace Danso", reason: "Postpartum check · Day 5", time: "10:30 AM", tag: "Postpartum" },
-  { initials: "NB", name: "Naa Boateng", reason: "First visit · 12 weeks", time: "12:00 PM", tag: "Antenatal" },
-];
 
-const due = [
-  { initials: "AO", name: "Ama Owusu", note: "Expected in 12 weeks", level: "Wk 28" },
-  { initials: "YM", name: "Yaa Mensah", note: "Expected in 3 weeks", level: "Wk 37" },
-];
 
 const activity = [
   { icon: HeartPulse, text: "Recorded fetal heartbeat — A. Owusu", time: "30m ago" },

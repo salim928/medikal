@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import { FileText, Upload, Download, Search, Plus, Eye } from "lucide-react";
+import { FileText, Upload, Search, Plus, Eye } from "lucide-react";
 import { medicalRecords, type RecordType } from "@/lib/data";
 
 const filterTypes: { id: "all" | RecordType; label: string }[] = [

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { transactions, type TransactionType } from '@/lib/data';
-import { Wallet, BarChart3, CheckCircle2, Stethoscope, ClipboardList, Pill, CreditCard, Inbox, Download } from 'lucide-react';
+import { Wallet, BarChart3, CheckCircle2, Stethoscope, ClipboardList, Pill, CreditCard, Inbox } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 
 export default function PaymentHistoryPage() {

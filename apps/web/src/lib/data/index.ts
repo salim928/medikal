@@ -6,7 +6,7 @@
  * when a real backend is connected only this file changes — the UI is untouched.
  */
 import {
-  Video, Pill, FlaskConical, ShieldCheck, FileText, PlusCircle, Brain, User,
+  Video, Pill, FlaskConical, ShieldCheck, PlusCircle, Brain, User,
   Baby, Activity, HeartPulse,
 } from "lucide-react";
 
@@ -590,4 +590,55 @@ export const securitySessions: SecuritySession[] = [
   { id: "s1", device: "Windows PC — Chrome", location: "Accra, Ghana", ipAddress: "154.160.1.24", lastActive: new Date().toISOString(), current: true },
   { id: "s2", device: "iPhone 15 — Safari", location: "Accra, Ghana", ipAddress: "154.160.3.87", lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), current: false },
   { id: "s3", device: "Android — Chrome", location: "Kumasi, Ghana", ipAddress: "41.215.168.9", lastActive: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), current: false },
+];
+
+/* --------------------------- role dashboard seeds ------------------------ */
+/* View data for the nurse / midwife / lawyer role dashboards. */
+
+export interface ScheduleRow {
+  initials: string;
+  name: string;
+  reason: string;
+  time: string;
+  tag?: string;
+}
+
+export interface QueueRow {
+  initials: string;
+  name: string;
+  note: string;
+  level: string;
+}
+
+export const nurseRounds: ScheduleRow[] = [
+  { initials: "AB", name: "Akosua Boateng", reason: "Vitals check · Ward B", time: "8:30 AM" },
+  { initials: "KM", name: "Kofi Mensah", reason: "Wound dressing", time: "9:45 AM" },
+  { initials: "EN", name: "Efua Nyarko", reason: "Medication round", time: "11:00 AM" },
+];
+
+export const nurseTasks: QueueRow[] = [
+  { initials: "TA", name: "Record vitals — Bed 12", note: "Due in 15 min", level: "Due" },
+  { initials: "SG", name: "Administer meds — Bed 7", note: "Scheduled 11:00", level: "Upcoming" },
+];
+
+export const midwifeVisits: ScheduleRow[] = [
+  { initials: "AO", name: "Ama Owusu", reason: "Antenatal · 28 weeks", time: "9:00 AM", tag: "Antenatal" },
+  { initials: "GD", name: "Grace Danso", reason: "Postpartum check · Day 5", time: "10:30 AM", tag: "Postpartum" },
+  { initials: "NB", name: "Naa Boateng", reason: "First visit · 12 weeks", time: "12:00 PM", tag: "Antenatal" },
+];
+
+export const midwifeDue: QueueRow[] = [
+  { initials: "AO", name: "Ama Owusu", note: "Expected in 12 weeks", level: "Wk 28" },
+  { initials: "YM", name: "Yaa Mensah", note: "Expected in 3 weeks", level: "Wk 37" },
+];
+
+export const lawyerConsults: ScheduleRow[] = [
+  { initials: "PM", name: "Patient — M. Addo", reason: "Consent & data-rights review", time: "10:00 AM", tag: "Consult" },
+  { initials: "CL", name: "City Clinic Ltd.", reason: "Malpractice case review", time: "1:00 PM", tag: "Case" },
+  { initials: "HR", name: "HR — MedGroup", reason: "Compliance advisory", time: "3:30 PM", tag: "Advisory" },
+];
+
+export const lawyerCases: QueueRow[] = [
+  { initials: "CL", name: "City Clinic — Negligence claim", note: "Discovery phase", level: "Active" },
+  { initials: "RX", name: "Rx dispute — Pharmacy A", note: "Awaiting documents", level: "Pending" },
 ];
