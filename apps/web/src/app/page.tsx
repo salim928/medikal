@@ -60,14 +60,14 @@ function Hero() {
     { icon: HeartPulse, title: "Follow-Up Care", body: "Ongoing support when you need it" },
   ];
   return (
-    <section className="bg-gradient-to-br from-navy-950 via-navy to-navy-800">
+    <section className="bg-gradient-to-br from-white via-blue-50/50 to-blue-100/70">
       <div className="container grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
         <div>
-          <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">
+          <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
             Healthcare<br />that&apos;s there<br />for you.{" "}
-            <span className="text-blue-400">Anywhere.</span>
+            <span className="text-brand-600">Anywhere.</span>
           </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-slate-300">
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-slate-600">
             Talk to licensed doctors, get prescriptions, and receive care from the comfort of home.
           </p>
           <div className="mt-8 flex flex-wrap gap-8">
@@ -78,14 +78,14 @@ function Hero() {
             <Link href="/signup" className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-brand-700">
               Get Started <ArrowRight className="h-5 w-5" />
             </Link>
-            <a href="#how" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/10">
+            <a href="#how" className="inline-flex items-center justify-center gap-2 rounded-xl border border-brand-200 bg-white px-7 py-3.5 text-base font-semibold text-brand-700 shadow-sm transition hover:bg-brand-50">
               <Play className="h-4 w-4 fill-current" /> See How It Works
             </a>
           </div>
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-400">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-blue-400" /> HIPAA Compliant</span>
-            <span className="flex items-center gap-1.5"><Lock className="h-4 w-4 text-blue-400" /> Secure</span>
-            <span className="flex items-center gap-1.5"><Check className="h-4 w-4 text-blue-400" /> Private</span>
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-500">
+            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-brand-600" /> HIPAA Compliant</span>
+            <span className="flex items-center gap-1.5"><Lock className="h-4 w-4 text-brand-600" /> Secure</span>
+            <span className="flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-600" /> Private</span>
           </div>
         </div>
 
@@ -127,10 +127,10 @@ function Hero() {
 function TrustItem({ icon: Icon, title, body }: { icon: React.ComponentType<{ className?: string }>; title: string; body: string }) {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-300"><Icon className="h-5 w-5" /></span>
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600"><Icon className="h-5 w-5" /></span>
       <div>
-        <p className="text-sm font-semibold text-white">{title}</p>
-        <p className="text-xs text-slate-400">{body}</p>
+        <p className="text-sm font-semibold text-slate-900">{title}</p>
+        <p className="text-xs text-slate-500">{body}</p>
       </div>
     </div>
   );
@@ -148,19 +148,19 @@ const services = [
 
 function Services() {
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-white py-20">
       <div className="container">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">Care for every stage of life</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Our services</h2>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {services.map((s) => (
-            <div key={s.title} className="group rounded-2xl border border-slate-200 bg-white p-6 text-center transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover">
-              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-600 group-hover:text-white"><s.icon className="h-7 w-7" /></span>
-              <h3 className="mt-5 font-display text-lg font-semibold text-slate-900">{s.title}</h3>
-              <p className="mt-2 text-sm text-slate-500">{s.body}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">Learn more <ArrowRight className="h-4 w-4" /></span>
+            <div key={s.title} className="group rounded-2xl border border-slate-200 bg-white p-5 text-center transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover">
+              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-600 group-hover:text-white"><s.icon className="h-6 w-6" /></span>
+              <h3 className="mt-4 font-display text-base font-semibold text-slate-900">{s.title}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">{s.body}</p>
+              <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-600">Learn more <ArrowRight className="h-3.5 w-3.5" /></span>
             </div>
           ))}
         </div>
@@ -179,14 +179,14 @@ const steps = [
 
 function HowItWorks() {
   return (
-    <section id="how" className="bg-white py-20">
+    <section id="how" className="bg-blue-50/60 py-20">
       <div className="container">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">Get care in 4 simple steps</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">How it works</h2>
         </div>
         <div className="relative mt-16 grid gap-8 md:grid-cols-4">
-          <div className="absolute left-[12%] right-[12%] top-8 hidden border-t-2 border-dashed border-slate-200 md:block" />
+          <div className="absolute left-[12%] right-[12%] top-8 hidden border-t-2 border-dashed border-brand-200 md:block" />
           {steps.map((s, i) => (
             <div key={s.title} className="relative text-center">
               <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-600 shadow-sm">
@@ -214,7 +214,7 @@ const reasons = [
 
 function WhyChoose() {
   return (
-    <section className="bg-slate-50 py-20">
+    <section className="bg-white py-20">
       <div className="container">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">Why choose medicom</p>
@@ -243,16 +243,16 @@ function Stats() {
     { icon: MapPin, value: "16 Regions", label: "Available across Ghana" },
   ];
   return (
-    <section className="bg-navy py-16 text-white">
+    <section className="bg-brand-700 py-16 text-white">
       <div className="container text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-blue-300">Trusted by thousands</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-200">Trusted by thousands</p>
         <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">Care you can count on</h2>
-        <div className="mt-12 grid grid-cols-2 gap-8 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-8 divide-white/15 lg:grid-cols-4 lg:divide-x">
           {stats.map((s) => (
             <div key={s.label}>
-              <s.icon className="mx-auto h-7 w-7 text-blue-300" />
+              <s.icon className="mx-auto h-7 w-7 text-brand-200" />
               <div className="mt-3 font-display text-3xl font-bold sm:text-4xl">{s.value}</div>
-              <div className="mt-1 text-sm text-slate-300">{s.label}</div>
+              <div className="mt-1 text-sm text-brand-100">{s.label}</div>
             </div>
           ))}
         </div>
@@ -266,7 +266,8 @@ function AppSection() {
   const items = ["Book or start a visit", "Message your care team", "Track prescriptions & orders", "Manage your health easily"];
   return (
     <section className="bg-white py-20">
-      <div className="container grid items-center gap-12 lg:grid-cols-2">
+      <div className="container">
+      <div className="grid items-center gap-12 rounded-3xl bg-blue-50/70 p-8 sm:p-12 lg:grid-cols-2">
         <div className="relative flex justify-center">
           <div className="w-[220px] rounded-[2rem] border-8 border-slate-900 bg-slate-900 shadow-xl">
             <div className="overflow-hidden rounded-[1.4rem]">
@@ -291,6 +292,7 @@ function AppSection() {
             <StoreBadge top="GET IT ON" bottom="Google Play" />
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
@@ -351,14 +353,20 @@ function Testimonials() {
 
 /* ----------------------------- Insurance ------------------------------- */
 function Insurance() {
-  const plans = ["NHIS", "GLICO Healthcare", "Acacia Health", "Nationwide Medical", "Premier Health"];
+  const plans = [
+    { name: "NHIS", color: "text-emerald-600" },
+    { name: "GLICO Healthcare", color: "text-blue-700" },
+    { name: "Acacia Health", color: "text-purple-600" },
+    { name: "Nationwide Medical", color: "text-sky-600" },
+    { name: "Premier Health", color: "text-teal-600" },
+  ];
   return (
     <section className="bg-white py-14">
       <div className="container text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-slate-400">We accept all major insurance plans</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">We accept most major insurance plans</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
           {plans.map((p) => (
-            <span key={p} className="font-display text-xl font-bold text-slate-400">{p}</span>
+            <span key={p.name} className={`font-display text-xl font-bold ${p.color}`}>{p.name}</span>
           ))}
           <span className="text-sm font-medium text-slate-400">and more</span>
         </div>
@@ -376,11 +384,11 @@ function Footer() {
     { h: "For Business", items: ["Employer Solutions", "Health Plans", "Partner With Us", "API & Developers"] },
   ];
   return (
-    <footer className="bg-navy-950 text-white">
+    <footer className="bg-brand-700 text-white">
       <div className="container grid gap-10 py-16 md:grid-cols-5">
         <div className="md:col-span-1">
           <Logo light />
-          <p className="mt-4 max-w-xs text-sm text-slate-300">Making quality healthcare accessible, convenient, and personal for everyone.</p>
+          <p className="mt-4 max-w-xs text-sm text-brand-100">Making quality healthcare accessible, convenient, and personal for everyone.</p>
           <div className="mt-5 flex gap-3">
             {[Facebook, Twitter, Instagram, Linkedin, Youtube].map((Icon, i) => (
               <a key={i} href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"><Icon className="h-4 w-4" /></a>
@@ -390,14 +398,14 @@ function Footer() {
         {cols.map((c) => (
           <div key={c.h}>
             <h4 className="font-display text-sm font-semibold uppercase tracking-wide text-white">{c.h}</h4>
-            <ul className="mt-4 space-y-2.5 text-sm text-slate-300">
+            <ul className="mt-4 space-y-2.5 text-sm text-brand-100">
               {c.items.map((i) => (<li key={i}><a href="#" className="transition hover:text-white">{i}</a></li>))}
             </ul>
           </div>
         ))}
       </div>
       <div className="border-t border-white/10">
-        <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm text-slate-400 sm:flex-row">
+        <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm text-brand-100 sm:flex-row">
           <p>© {new Date().getFullYear()} medicom. All rights reserved.</p>
           <p className="flex items-center gap-4">
             <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4" /> HIPAA Compliant</span>
