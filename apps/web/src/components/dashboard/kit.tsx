@@ -23,8 +23,8 @@ export function WelcomeBanner({
   actions?: React.ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-8 sm:px-10 sm:py-10">
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_80%_at_15%_10%,rgba(99,102,241,0.45),transparent_65%)]" />
+    <section className="relative overflow-hidden rounded-3xl bg-navy-950 px-6 py-8 sm:px-10 sm:py-10">
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(60%_80%_at_15%_10%,rgba(37,99,235,0.45),transparent_65%)]" />
       <div aria-hidden className="absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-brand-600/25 blur-3xl" />
       <div className="relative flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
         <div>

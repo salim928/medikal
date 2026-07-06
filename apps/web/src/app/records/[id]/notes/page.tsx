@@ -99,28 +99,28 @@ export default function AddClinicalNotePage() {
             <Button
               type="button"
               onClick={() => setNoteContent("Assessment: \n\nFindings: \n\nDiagnosis: \n\nTreatment Plan: \n\nFollow-up: ")}
-              className="bg-mist hover:bg-slate-200 text-left justify-start"
+              className="bg-mist text-slate-700 hover:bg-slate-200 text-left justify-start"
             >
               General Assessment
             </Button>
             <Button
               type="button"
               onClick={() => setNoteContent("Lab Results Review:\n\nKey Findings: \n\nInterpretation: \n\nRecommendations: ")}
-              className="bg-mist hover:bg-slate-200 text-left justify-start"
+              className="bg-mist text-slate-700 hover:bg-slate-200 text-left justify-start"
             >
               Lab Results Review
             </Button>
             <Button
               type="button"
               onClick={() => setNoteContent("Follow-up Visit:\n\nProgress: \n\nCurrent Status: \n\nNext Steps: ")}
-              className="bg-mist hover:bg-slate-200 text-left justify-start"
+              className="bg-mist text-slate-700 hover:bg-slate-200 text-left justify-start"
             >
               Follow-up Visit
             </Button>
             <Button
               type="button"
               onClick={() => setNoteContent("Treatment Response:\n\nSymptoms: \n\nMedication Review: \n\nAdjustments: ")}
-              className="bg-mist hover:bg-slate-200 text-left justify-start"
+              className="bg-mist text-slate-700 hover:bg-slate-200 text-left justify-start"
             >
               Treatment Response
             </Button>
@@ -167,7 +167,7 @@ export default function AddClinicalNotePage() {
             type="button"
             onClick={() => router.back()}
             disabled={saving}
-            className="bg-mist hover:bg-slate-200 py-3"
+            className="bg-mist text-slate-700 hover:bg-slate-200 py-3"
           >
             Cancel
           </Button>

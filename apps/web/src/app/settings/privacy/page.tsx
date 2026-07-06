@@ -126,7 +126,7 @@ export default function PrivacySettingsPage() {
       {alert && (
         <div className={`rounded-lg p-4 border flex items-center gap-3 ${
           alert.type === 'success' 
-            ? 'bg-brand-500/10 border-green-500/50 text-green-400'
+            ? 'bg-brand-500/10 border-green-500/50 text-emerald-600'
             : 'bg-red-500/10 border-red-500/50 text-red-600'
         }`}>
           {alert.type === 'success' ? (
@@ -190,7 +190,7 @@ export default function PrivacySettingsPage() {
             <div className="ml-3">
               <div className="flex items-center gap-2">
                 <p className="text-ink font-medium">Providers Only</p>
-                <span className="px-2 py-0.5 bg-brand-500/20 border border-green-500/50 rounded text-green-400 text-xs">
+                <span className="px-2 py-0.5 bg-brand-500/20 border border-green-500/50 rounded text-emerald-600 text-xs">
                   Recommended
                 </span>
               </div>
@@ -259,7 +259,7 @@ export default function PrivacySettingsPage() {
 
           <div className="flex items-start justify-between py-3">
             <div className="flex items-start gap-3 flex-1">
-              <Share2 className="w-5 h-5 text-green-400 mt-1" />
+              <Share2 className="w-5 h-5 text-emerald-600 mt-1" />
               <div>
                 <p className="text-ink font-medium">Third-Party Integrations</p>
                 <p className="text-sm text-slate-500">
@@ -297,7 +297,7 @@ export default function PrivacySettingsPage() {
             <div className="ml-3">
               <div className="flex items-center gap-2">
                 <p className="text-ink font-medium">All Providers</p>
-                <span className="px-2 py-0.5 bg-brand-500/20 border border-green-500/50 rounded text-green-400 text-xs">
+                <span className="px-2 py-0.5 bg-brand-500/20 border border-green-500/50 rounded text-emerald-600 text-xs">
                   Recommended
                 </span>
               </div>
@@ -346,7 +346,7 @@ export default function PrivacySettingsPage() {
         </Button>
         <Button 
           onClick={() => setSettings(defaultSettings)}
-          className="bg-mist hover:bg-slate-200"
+          className="bg-mist text-slate-700 hover:bg-slate-200"
         >
           Reset to Defaults
         </Button>
@@ -400,7 +400,7 @@ export default function PrivacySettingsPage() {
             ) : (
               <div className="space-y-3">
                 <div className="p-3 bg-canvas border border-yellow-500/50 rounded-lg">
-                  <p className="text-yellow-400 text-sm font-medium mb-2">
+                  <p className="text-amber-600 text-sm font-medium mb-2">
                     ⚠️ This will permanently delete:
                   </p>
                   <ul className="text-slate-600 text-sm space-y-1 ml-4">
@@ -437,7 +437,7 @@ export default function PrivacySettingsPage() {
                       setShowDeleteConfirm(false);
                       setDeleteConfirmText('');
                     }}
-                    className="bg-mist hover:bg-slate-200"
+                    className="bg-mist text-slate-700 hover:bg-slate-200"
                   >
                     Cancel
                   </Button>
@@ -455,7 +455,7 @@ export default function PrivacySettingsPage() {
             <FileText className="w-5 h-5 text-slate-500" />
             <p className="text-slate-600">Read our full Privacy Policy and Terms of Service</p>
           </div>
-          <Button className="bg-mist hover:bg-slate-200">
+          <Button className="bg-mist text-slate-700 hover:bg-slate-200">
             View Policies
           </Button>
         </div>

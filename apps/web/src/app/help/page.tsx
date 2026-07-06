@@ -33,7 +33,7 @@ const faqs: FAQItem[] = [
   {
     category: "Getting Started",
     question: "Is medicom available in my area?",
-    answer: "medicom operates in all 50 US states. Healthcare provider availability may vary by location. Use our 'Find Doctors' feature to see providers in your area."
+    answer: "medicom operates across all 16 regions of Ghana, with providers concentrated in Accra, Kumasi, Cape Coast and Tamale. Availability may vary by location. Use our 'Find Doctors' feature to see providers in your area."
   },
   {
     category: "Appointments",
@@ -247,7 +247,7 @@ export default function HelpPage() {
             href="/appointments"
             className="bg-white border border-green-500/30 rounded-lg p-6 hover:border-green-500 transition group"
           >
-            <Video className="w-8 h-8 text-green-400 mb-3 group-hover:scale-110 transition-transform" />
+            <Video className="w-8 h-8 text-emerald-600 mb-3 group-hover:scale-110 transition-transform" />
             <h3 className="text-lg font-semibold text-ink mb-2">Video Consultations</h3>
             <p className="text-sm text-slate-500">
               Join your upcoming video appointments

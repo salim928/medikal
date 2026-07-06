@@ -77,11 +77,11 @@ export default function NotificationsPage() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
-        return 'border-red-300 bg-red-50';
+        return 'border-l-4 border-slate-200 border-l-red-500 bg-white';
       case 'medium':
-        return 'border-amber-300 bg-amber-50';
+        return 'border-l-4 border-slate-200 border-l-amber-500 bg-white';
       default:
-        return 'border-slate-200 bg-mist';
+        return 'border-l-4 border-slate-200 border-l-brand-500 bg-white';
     }
   };
 
@@ -185,19 +185,19 @@ export default function NotificationsPage() {
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={() => setFilter('all')}
-              className={filter === 'all' ? 'bg-brand-600' : 'bg-mist'}
+              className={filter === 'all' ? 'bg-brand-600' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               All
             </Button>
             <Button
               onClick={() => setFilter('unread')}
-              className={filter === 'unread' ? 'bg-brand-600' : 'bg-mist'}
+              className={filter === 'unread' ? 'bg-brand-600' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               Unread ({unreadCount})
             </Button>
             <Button
               onClick={() => setFilter('read')}
-              className={filter === 'read' ? 'bg-brand-600' : 'bg-mist'}
+              className={filter === 'read' ? 'bg-brand-600' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               Read
             </Button>
@@ -206,27 +206,27 @@ export default function NotificationsPage() {
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={() => setTypeFilter('all')}
-              className={typeFilter === 'all' ? 'bg-brand-500' : 'bg-mist'}
+              className={typeFilter === 'all' ? 'bg-brand-500' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               All Types
             </Button>
             <Button
               onClick={() => setTypeFilter('appointment')}
-              className={typeFilter === 'appointment' ? 'bg-brand-500' : 'bg-mist'}
+              className={typeFilter === 'appointment' ? 'bg-brand-500' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               <Calendar className="w-4 h-4 mr-1" />
               Appointments
             </Button>
             <Button
               onClick={() => setTypeFilter('prescription')}
-              className={typeFilter === 'prescription' ? 'bg-brand-500' : 'bg-mist'}
+              className={typeFilter === 'prescription' ? 'bg-brand-500' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               <Pill className="w-4 h-4 mr-1" />
               Prescriptions
             </Button>
             <Button
               onClick={() => setTypeFilter('record')}
-              className={typeFilter === 'record' ? 'bg-brand-500' : 'bg-mist'}
+              className={typeFilter === 'record' ? 'bg-brand-500' : 'bg-mist text-slate-700 hover:bg-slate-200'}
             >
               <FileText className="w-4 h-4 mr-1" />
               Records
@@ -250,8 +250,8 @@ export default function NotificationsPage() {
               className={`rounded-lg p-4 border transition-all ${
                 !notification.read
                   ? getPriorityColor(notification.priority)
-                  : 'border-slate-200 bg-white/20'
-              } ${!notification.read ? 'shadow-lg' : ''}`}
+                  : 'border-slate-200 bg-white opacity-70'
+              } ${!notification.read ? 'shadow-sm' : ''}`}
             >
               <div className="flex items-start gap-4">
                 {/* Icon */}

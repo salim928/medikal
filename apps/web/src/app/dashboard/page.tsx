@@ -40,7 +40,7 @@ export default function DashboardPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-canvas">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-cyan-400 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-brand-600 mx-auto mb-4"></div>
         <p className="text-slate-600 text-lg">Redirecting to your dashboard...</p>
       </div>
     </div>

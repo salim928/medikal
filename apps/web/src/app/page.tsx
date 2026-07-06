@@ -60,14 +60,14 @@ function Hero() {
     { icon: HeartPulse, title: "Follow-Up Care", body: "Ongoing support when you need it" },
   ];
   return (
-    <section className="bg-white">
+    <section className="bg-gradient-to-br from-navy-950 via-navy to-navy-800">
       <div className="container grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
         <div>
-          <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
+          <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">
             Healthcare<br />that&apos;s there<br />for you.{" "}
-            <span className="text-brand-600">Anywhere.</span>
+            <span className="text-blue-400">Anywhere.</span>
           </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-slate-600">
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-slate-300">
             Talk to licensed doctors, get prescriptions, and receive care from the comfort of home.
           </p>
           <div className="mt-8 flex flex-wrap gap-8">
@@ -78,14 +78,14 @@ function Hero() {
             <Link href="/signup" className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-brand-700">
               Get Started <ArrowRight className="h-5 w-5" />
             </Link>
-            <a href="#how" className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-7 py-3.5 text-base font-semibold text-slate-700 transition hover:bg-slate-50">
+            <a href="#how" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/10">
               <Play className="h-4 w-4 fill-current" /> See How It Works
             </a>
           </div>
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-500">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-brand-600" /> HIPAA Compliant</span>
-            <span className="flex items-center gap-1.5"><Lock className="h-4 w-4 text-brand-600" /> Secure</span>
-            <span className="flex items-center gap-1.5"><Check className="h-4 w-4 text-brand-600" /> Private</span>
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-slate-400">
+            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-blue-400" /> HIPAA Compliant</span>
+            <span className="flex items-center gap-1.5"><Lock className="h-4 w-4 text-blue-400" /> Secure</span>
+            <span className="flex items-center gap-1.5"><Check className="h-4 w-4 text-blue-400" /> Private</span>
           </div>
         </div>
 
@@ -127,10 +127,10 @@ function Hero() {
 function TrustItem({ icon: Icon, title, body }: { icon: React.ComponentType<{ className?: string }>; title: string; body: string }) {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600"><Icon className="h-5 w-5" /></span>
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-blue-300"><Icon className="h-5 w-5" /></span>
       <div>
-        <p className="text-sm font-semibold text-slate-900">{title}</p>
-        <p className="text-xs text-slate-500">{body}</p>
+        <p className="text-sm font-semibold text-white">{title}</p>
+        <p className="text-xs text-slate-400">{body}</p>
       </div>
     </div>
   );
@@ -376,7 +376,7 @@ function Footer() {
     { h: "For Business", items: ["Employer Solutions", "Health Plans", "Partner With Us", "API & Developers"] },
   ];
   return (
-    <footer className="bg-brand-700 text-white">
+    <footer className="bg-navy-950 text-white">
       <div className="container grid gap-10 py-16 md:grid-cols-5">
         <div className="md:col-span-1">
           <Logo light />

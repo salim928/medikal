@@ -108,8 +108,8 @@ export default function UploadRecordPage() {
           </div>
           {selectedFile && (
             <div className="mt-3 p-3 bg-brand-500/10 border border-green-500/30 rounded-lg flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <span className="text-green-400">Selected: {selectedFile.name}</span>
+              <CheckCircle className="w-5 h-5 text-emerald-600" />
+              <span className="text-emerald-600">Selected: {selectedFile.name}</span>
             </div>
           )}
         </div>
@@ -213,7 +213,7 @@ export default function UploadRecordPage() {
             type="button"
             onClick={() => router.back()}
             disabled={uploading}
-            className="bg-mist hover:bg-slate-200 py-3"
+            className="bg-mist text-slate-700 hover:bg-slate-200 py-3"
           >
             Cancel
           </Button>

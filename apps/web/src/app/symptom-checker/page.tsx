@@ -73,9 +73,9 @@ export default function SymptomCheckerPage() {
   const getUrgencyColor = (level: string) => {
     switch (level) {
       case 'Low':
-        return 'bg-brand-500/20 text-green-400 border-green-500/50';
+        return 'bg-brand-500/20 text-emerald-600 border-green-500/50';
       case 'Medium':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+        return 'bg-yellow-500/20 text-amber-600 border-yellow-500/50';
       case 'High':
         return 'bg-brand-500/20 text-orange-400 border-orange-500/50';
       case 'Emergency':
@@ -96,7 +96,7 @@ export default function SymptomCheckerPage() {
 
         {/* Medical Disclaimer */}
         <div className="mb-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-          <p className="text-yellow-400 text-sm">
+          <p className="text-amber-600 text-sm">
             ⚠️ <strong>Medical Disclaimer:</strong> This AI tool provides preliminary information only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for medical concerns.
           </p>
         </div>

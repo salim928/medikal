@@ -161,7 +161,7 @@ export default function AvailabilityPage() {
         </Button>
         <Button
           onClick={() => router.back()}
-          className="bg-mist hover:bg-slate-200 py-3"
+          className="bg-mist text-slate-700 hover:bg-slate-200 py-3"
         >
           Cancel
         </Button>

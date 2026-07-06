@@ -19,6 +19,13 @@ module.exports = {
     'bg-slate-100', 'text-slate-600', 'border-slate-200',
     'bg-red-50', 'text-red-700', 'border-red-200',
     'bg-amber-50', 'text-amber-700', 'border-amber-200',
+    // Navy sidebar/app-shell tokens
+    'bg-navy', 'bg-navy-800', 'bg-navy-950', 'from-navy-950', 'via-navy', 'to-navy-800',
+    'bg-gradient-to-br', 'border-white/10', 'border-white/25', 'bg-white/10', 'bg-white/5',
+    'text-blue-400', 'text-slate-400',
+    'hover:bg-white/10', 'hover:bg-white/5', 'hover:text-white', 'hover:text-red-300',
+    'text-slate-200', 'text-slate-300', 'text-blue-300', 'group-hover:text-slate-200',
+    'border-l-4', 'border-l-red-500', 'border-l-amber-500', 'border-l-brand-500', 'opacity-70',
   ],
   theme: {
     container: {
@@ -32,6 +39,12 @@ module.exports = {
         display: ['var(--font-display)', 'var(--font-sans)', 'sans-serif'],
       },
       colors: {
+        navy: {
+          DEFAULT: '#0B1B3A',
+          800: '#10244C',
+          900: '#0B1B3A',
+          950: '#061027',
+        },
         // shadcn/ui semantic tokens (driven by CSS variables in globals.css).
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

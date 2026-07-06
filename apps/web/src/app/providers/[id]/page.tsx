@@ -94,7 +94,7 @@ export default function ProviderProfilePage() {
                   <Star
                     key={i}
                     className={`h-5 w-5 ${
-                      i < Math.floor(provider.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'
+                      i < Math.floor(provider.rating) ? 'fill-yellow-400 text-amber-600' : 'text-slate-300'
                     }`}
                   />
                 ))}
@@ -173,7 +173,7 @@ export default function ProviderProfilePage() {
                         <Star
                           key={i}
                           className={`h-4 w-4 ${
-                            i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'
+                            i < review.rating ? 'fill-yellow-400 text-amber-600' : 'text-slate-300'
                           }`}
                         />
                       ))}

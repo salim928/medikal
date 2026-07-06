@@ -138,7 +138,7 @@ export default function SecuritySettingsPage() {
       {alert && (
         <div className={`rounded-lg p-4 border flex items-center gap-3 ${
           alert.type === 'success' 
-            ? 'bg-brand-500/10 border-green-500/50 text-green-400'
+            ? 'bg-brand-500/10 border-green-500/50 text-emerald-600'
             : 'bg-red-500/10 border-red-500/50 text-red-600'
         }`}>
           {alert.type === 'success' ? (
@@ -245,7 +245,7 @@ export default function SecuritySettingsPage() {
           </div>
           <div className={`px-3 py-1 rounded-full text-sm font-medium ${
             twoFactorEnabled 
-              ? 'bg-brand-500/20 text-green-400 border border-green-500/50'
+              ? 'bg-brand-500/20 text-emerald-600 border border-green-500/50'
               : 'bg-mist text-slate-500'
           }`}>
             {twoFactorEnabled ? 'Enabled' : 'Disabled'}
@@ -275,7 +275,7 @@ export default function SecuritySettingsPage() {
               <Button onClick={handleSetupTwoFactor} className="bg-brand-500 hover:bg-brand-600">
                 I've Scanned the Code
               </Button>
-              <Button onClick={() => setShowTwoFactorSetup(false)} className="bg-mist hover:bg-slate-200">
+              <Button onClick={() => setShowTwoFactorSetup(false)} className="bg-mist text-slate-700 hover:bg-slate-200">
                 Cancel
               </Button>
             </div>
@@ -310,7 +310,7 @@ export default function SecuritySettingsPage() {
                     <div className="flex items-center gap-2">
                       <h3 className="font-medium text-ink">{session.device}</h3>
                       {session.current && (
-                        <span className="px-2 py-0.5 bg-brand-500/20 border border-green-500/50 rounded text-green-400 text-xs">
+                        <span className="px-2 py-0.5 bg-brand-500/20 border border-green-500/50 rounded text-emerald-600 text-xs">
                           Current
                         </span>
                       )}
@@ -341,24 +341,24 @@ export default function SecuritySettingsPage() {
       {/* Security Recommendations */}
       <div className="bg-yellow-500/10 border border-yellow-500/50 rounded-lg p-6">
         <div className="flex items-start gap-3">
-          <Key className="w-6 h-6 text-yellow-400 mt-1" />
+          <Key className="w-6 h-6 text-amber-600 mt-1" />
           <div>
-            <h3 className="text-lg font-semibold text-yellow-400 mb-2">Security Recommendations</h3>
+            <h3 className="text-lg font-semibold text-amber-600 mb-2">Security Recommendations</h3>
             <ul className="space-y-2 text-slate-600 text-sm">
               <li className="flex items-start gap-2">
-                <span className="text-yellow-400 mt-1">•</span>
+                <span className="text-amber-600 mt-1">•</span>
                 <span>Use a strong, unique password for your medicom account</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-yellow-400 mt-1">•</span>
+                <span className="text-amber-600 mt-1">•</span>
                 <span>Enable two-factor authentication for maximum security</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-yellow-400 mt-1">•</span>
+                <span className="text-amber-600 mt-1">•</span>
                 <span>Review your active sessions regularly and revoke any unrecognized devices</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-yellow-400 mt-1">•</span>
+                <span className="text-amber-600 mt-1">•</span>
                 <span>Never share your password or authentication codes with anyone</span>
               </li>
             </ul>

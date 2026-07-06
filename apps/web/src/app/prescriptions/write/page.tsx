@@ -238,8 +238,8 @@ export default function WritePrescriptionPage() {
                   key={index}
                   className={`p-3 rounded-lg ${
                     interaction.includes('✓') 
-                      ? 'bg-brand-500/20 border border-green-500/30 text-green-400'
-                      : 'bg-yellow-500/20 border border-yellow-500/30 text-yellow-400'
+                      ? 'bg-brand-500/20 border border-green-500/30 text-emerald-600'
+                      : 'bg-yellow-500/20 border border-yellow-500/30 text-amber-600'
                   }`}
                 >
                   {interaction}
@@ -258,7 +258,7 @@ export default function WritePrescriptionPage() {
           <Button
             type="button"
             onClick={() => router.back()}
-            className="bg-mist hover:bg-slate-200 py-3"
+            className="bg-mist text-slate-700 hover:bg-slate-200 py-3"
           >
             Cancel
           </Button>

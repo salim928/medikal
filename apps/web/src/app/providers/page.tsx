@@ -167,7 +167,7 @@ export default function ProvidersPage() {
                       key={i}
                       className={`h-4 w-4 ${
                         i < Math.floor(provider.rating)
-                          ? 'fill-yellow-400 text-yellow-400'
+                          ? 'fill-yellow-400 text-amber-600'
                           : 'text-slate-300'
                       }`}
                     />

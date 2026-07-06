@@ -99,7 +99,7 @@ export function NurseRegistrationForm() {
       {/* Error Alert */}
       {error && (
         <div className="mb-6 p-4 bg-red-900/30 border border-red-500/50 rounded-lg">
-          <p className="text-red-300 text-sm">{error}</p>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
 
