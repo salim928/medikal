@@ -25,6 +25,7 @@ interface DemoState {
 
   bookAppointment: (a: Omit<Appointment, "id" | "status">) => Appointment;
   cancelAppointment: (id: string) => void;
+  completeAppointment: (id: string) => void;
   rescheduleAppointment: (id: string, date: string, time: string) => void;
 
   markNotificationRead: (id: string) => void;
@@ -54,6 +55,13 @@ export const useDemoStore = create<DemoState>()(
         set((s) => ({
           appointments: s.appointments.map((a) =>
             a.id === id ? { ...a, status: "cancelled" as const } : a
+          ),
+        })),
+
+      completeAppointment: (id) =>
+        set((s) => ({
+          appointments: s.appointments.map((a) =>
+            a.id === id ? { ...a, status: "completed" as const } : a
           ),
         })),
 

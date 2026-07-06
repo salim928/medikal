@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Calendar, Clock, Plus, Trash2 } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
 
 interface TimeSlot {
   id: string;
@@ -14,8 +16,9 @@ interface TimeSlot {
 }
 
 export default function AvailabilityPage() {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, role } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     { id: "1", day: "Monday", startTime: "09:00", endTime: "17:00" },
     { id: "2", day: "Tuesday", startTime: "09:00", endTime: "17:00" },
@@ -27,11 +30,11 @@ export default function AvailabilityPage() {
       router.push("/login");
       return;
     }
-    // Only providers can access - redirect non-providers
-    if (!loading && user && user.role !== "provider" && user.role !== "doctor") {
+    // Availability management is for care providers only.
+    if (!loading && isAuthenticated && role === "patient") {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, loading, user, router]);
+  }, [isAuthenticated, loading, role, router]);
 
   const addTimeSlot = () => {
     const newSlot: TimeSlot = {
@@ -54,20 +57,13 @@ export default function AvailabilityPage() {
   };
 
   const handleSave = () => {
-    // TODO: Save to API
-    alert("Availability saved successfully!");
+    toast.success("Availability saved");
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner />;
 
-  // Don't render if not a provider (redirect will happen in useEffect)
-  if (user && user.role !== "provider" && user.role !== "doctor") {
+  // Don't render for patients (redirect happens in useEffect)
+  if (role === "patient") {
     return null;
   }
 

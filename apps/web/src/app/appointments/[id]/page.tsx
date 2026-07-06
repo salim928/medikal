@@ -2,38 +2,33 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import { Calendar, Clock, User, MapPin, FileText, Video, Phone, Mail } from "lucide-react";
+import { Calendar, Clock, User, MapPin, FileText, Video } from "lucide-react";
 import Link from "next/link";
+import { useDemoStore, getAppointment } from "@/lib/data/store";
+import { patients } from "@/lib/data";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
+import { statusClass } from "@/lib/ui/status";
 
 export default function AppointmentDetailsPage() {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, role } = useAuth();
   const router = useRouter();
   const params = useParams();
-  const id = params?.id;
+  const id = params?.id as string;
 
-  const isProvider = useMemo(() => {
-    return user?.role === "provider" || user?.role === "doctor";
-  }, [user]);
+  const appointments = useDemoStore((s) => s.appointments);
+  const cancelAppointment = useDemoStore((s) => s.cancelAppointment);
+  const completeAppointment = useDemoStore((s) => s.completeAppointment);
+  const toast = useToast();
 
-  // Mock appointment data
-  const appointment = {
-    id: id,
-    patientName: "John Doe",
-    doctorName: "Dr. Sarah Johnson",
-    date: "2024-10-25",
-    time: "10:00 AM",
-    type: "consultation",
-    status: "scheduled",
-    location: "virtual", // Changed to lowercase to match booking form
-    reason: "Annual checkup",
-    notes: "Please have your medical history ready",
-    patientEmail: "john.doe@example.com",
-    patientPhone: "+1 (555) 123-4567",
-    doctorSpecialty: "Cardiology",
-    videoRoomId: id, // Add video room ID for consultation link
-  };
+  const appointment = getAppointment(appointments, id);
+  const isProvider = role !== "patient";
+  // Link provider view to the real patient record when the names match.
+  const patientRecord = appointment?.patient
+    ? patients.find((p) => p.name === appointment.patient) ?? null
+    : null;
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -41,118 +36,116 @@ export default function AppointmentDetailsPage() {
     }
   }, [isAuthenticated, loading, router]);
 
-  const handleJoinCall = () => {
-    router.push(`/consultation/${id}`);
-  };
+  if (loading) return <PageSpinner />;
 
-  const handleCancel = () => {
-    if (confirm("Are you sure you want to cancel this appointment?")) {
-      alert("Appointment cancelled");
-      router.push("/appointments");
-    }
-  };
-
-  if (loading) {
+  if (!appointment) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
+      <div className="py-16 text-center">
+        <p className="text-lg font-semibold text-ink">Appointment not found</p>
+        <button
+          onClick={() => router.push("/appointments")}
+          className="mt-3 text-sm font-semibold text-brand-600 hover:text-brand-700"
+        >
+          Back to appointments
+        </button>
       </div>
     );
   }
 
+  const handleCancel = () => {
+    cancelAppointment(appointment.id);
+    toast.success("Appointment cancelled");
+    router.push("/appointments");
+  };
+
+  const handleComplete = () => {
+    completeAppointment(appointment.id);
+    toast.success("Appointment marked as completed");
+    router.push("/appointments");
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto max-w-4xl space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-slate-200">
-        <div className="flex justify-between items-start">
+      <div className="rounded-lg border border-slate-200 bg-gradient-to-r from-brand-500/10 to-brand-500/10 p-6">
+        <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <Calendar className="w-8 h-8 text-brand-600" />
+            <Calendar className="h-8 w-8 text-brand-600" />
             <div>
-              <h1 className="text-3xl font-bold text-ink">Appointment Details</h1>
-              <p className="text-slate-600 mt-1">#{appointment.id}</p>
+              <h1 className="font-display text-3xl font-bold text-ink">Appointment details</h1>
+              <p className="mt-1 text-slate-600">
+                {appointment.date} · {appointment.time}
+              </p>
             </div>
           </div>
-          <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
-            appointment.status === 'completed' ? 'bg-brand-500/20 text-green-400' :
-            appointment.status === 'cancelled' ? 'bg-red-500/20 text-red-600' :
-            'bg-yellow-500/20 text-yellow-400'
-          }`}>
-            {appointment.status.toUpperCase()}
+          <span className={`rounded-full border px-4 py-2 text-sm font-semibold capitalize ${statusClass(appointment.status)}`}>
+            {appointment.status}
           </span>
         </div>
       </div>
 
       {/* Main Details */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Participant Info */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-ink mb-4 flex items-center gap-2">
-            <User className="w-5 h-5 text-brand-600" />
-            {isProvider ? "Patient Information" : "Doctor Information"}
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-ink">
+            <User className="h-5 w-5 text-brand-600" />
+            {isProvider ? "Patient" : "Doctor"}
           </h2>
           <div className="space-y-3">
             <div>
               <p className="text-sm text-slate-500">Name</p>
-              <p className="text-ink font-medium">
-                {isProvider ? appointment.patientName : appointment.doctorName}
+              <p className="font-medium text-ink">
+                {isProvider ? appointment.patient ?? "—" : appointment.doctor}
               </p>
             </div>
-            {isProvider && (
+            {isProvider && patientRecord ? (
               <>
                 <div>
-                  <p className="text-sm text-slate-500">Email</p>
-                  <p className="text-ink font-medium flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-brand-600" />
-                    {appointment.patientEmail}
-                  </p>
+                  <p className="text-sm text-slate-500">Condition</p>
+                  <p className="font-medium text-ink">{patientRecord.condition}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500">Phone</p>
-                  <p className="text-ink font-medium flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-brand-600" />
-                    {appointment.patientPhone}
-                  </p>
+                  <p className="text-sm text-slate-500">Contact</p>
+                  <p className="font-medium text-ink">{patientRecord.phone}</p>
                 </div>
               </>
-            )}
-            {!isProvider && (
+            ) : (
               <div>
                 <p className="text-sm text-slate-500">Specialty</p>
-                <p className="text-ink font-medium">{appointment.doctorSpecialty}</p>
+                <p className="font-medium text-ink">{appointment.specialty}</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Appointment Info */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-ink mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-brand-600" />
-            Appointment Information
+        <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-ink">
+            <Calendar className="h-5 w-5 text-brand-600" />
+            Appointment information
           </h2>
           <div className="space-y-3">
             <div>
               <p className="text-sm text-slate-500">Date</p>
-              <p className="text-ink font-medium">{appointment.date}</p>
+              <p className="font-medium text-ink">{appointment.date}</p>
             </div>
             <div>
               <p className="text-sm text-slate-500">Time</p>
-              <p className="text-ink font-medium flex items-center gap-2">
-                <Clock className="w-4 h-4 text-brand-600" />
+              <p className="flex items-center gap-2 font-medium text-ink">
+                <Clock className="h-4 w-4 text-brand-600" />
                 {appointment.time}
               </p>
             </div>
             <div>
-              <p className="text-sm text-slate-500">Type</p>
-              <p className="text-ink font-medium">{appointment.type}</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-500">Location</p>
-              <p className="text-ink font-medium flex items-center gap-2">
-                {appointment.location === "virtual" ? (
-                  <><Video className="w-4 h-4 text-brand-600" /> Virtual Visit</>
+              <p className="text-sm text-slate-500">Visit type</p>
+              <p className="flex items-center gap-2 font-medium text-ink">
+                {appointment.mode === "Video" ? (
+                  <>
+                    <Video className="h-4 w-4 text-brand-600" /> Video visit
+                  </>
                 ) : (
-                  <><MapPin className="w-4 h-4 text-brand-600" /> {appointment.location === "in-person" ? "In-Person Visit" : appointment.location}</>
+                  <>
+                    <MapPin className="h-4 w-4 text-brand-600" /> In-person visit
+                  </>
                 )}
               </p>
             </div>
@@ -160,74 +153,60 @@ export default function AppointmentDetailsPage() {
         </div>
       </div>
 
-      {/* Reason and Notes */}
-      <div className="bg-white border border-slate-200 rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-ink mb-4 flex items-center gap-2">
-          <FileText className="w-5 h-5 text-brand-600" />
-          Visit Details
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm text-slate-500 mb-1">Reason for Visit</p>
-            <p className="text-ink">{appointment.reason}</p>
-          </div>
-          {appointment.notes && (
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Notes</p>
-              <p className="text-slate-600">{appointment.notes}</p>
-            </div>
-          )}
+      {/* Reason */}
+      {appointment.reason && (
+        <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-ink">
+            <FileText className="h-5 w-5 text-brand-600" />
+            Visit details
+          </h2>
+          <p className="text-sm text-slate-500">Reason for visit</p>
+          <p className="mt-1 text-ink">{appointment.reason}</p>
         </div>
-      </div>
+      )}
 
       {/* Actions */}
-      {appointment.status === 'scheduled' && (
-        <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-ink mb-4">Actions</h2>
+      {appointment.status === "scheduled" && (
+        <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <h2 className="mb-4 text-xl font-semibold text-ink">Actions</h2>
           <div className="flex flex-wrap gap-3">
-            {/* Show video call button for virtual appointments */}
-            {appointment.location === "virtual" && (
-              <Button
-                onClick={handleJoinCall}
-                className="bg-brand-500 hover:bg-brand-600 text-white"
-              >
-                <Video className="w-4 h-4 mr-2" />
-                Join Video Call
+            {appointment.mode === "Video" && (
+              <Button asChild className="bg-brand-500 hover:bg-brand-600 text-white">
+                <Link href={`/consultation/${appointment.id}`}>
+                  <Video className="mr-2 h-4 w-4" />
+                  Join video call
+                </Link>
               </Button>
             )}
-            
+
             {isProvider ? (
               <>
-                <Button asChild className="bg-brand-500 hover:bg-brand-600">
-                  <Link href={`/appointments/${id}/complete`}>Mark as Complete</Link>
+                <Button onClick={handleComplete} className="bg-emerald-600 hover:bg-emerald-700">
+                  Mark as complete
                 </Button>
-                <Button asChild className="bg-brand-500 hover:bg-brand-600">
-                  <Link href={`/patients/${appointment.patientName}`}>View Patient Records</Link>
-                </Button>
+                {patientRecord && (
+                  <Button asChild className="bg-brand-500 hover:bg-brand-600">
+                    <Link href={`/patients/${patientRecord.id}`}>View patient record</Link>
+                  </Button>
+                )}
               </>
             ) : (
               <Button asChild className="bg-brand-500 hover:bg-brand-600">
-                <Link href={`/appointments/${id}/reschedule`}>Reschedule</Link>
+                <Link href={`/appointments/${appointment.id}/reschedule`}>Reschedule</Link>
               </Button>
             )}
-            
-            <Button
-              onClick={handleCancel}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              Cancel Appointment
+
+            <Button onClick={handleCancel} className="bg-red-500 hover:bg-red-600">
+              Cancel appointment
             </Button>
           </div>
         </div>
       )}
 
-      {/* Back Button */}
+      {/* Back */}
       <div className="flex justify-center">
-        <Button
-          onClick={() => router.back()}
-          className="bg-mist hover:bg-slate-200"
-        >
-          Back to Appointments
+        <Button onClick={() => router.push("/appointments")} className="bg-mist text-slate-700 hover:bg-slate-200">
+          Back to appointments
         </Button>
       </div>
     </div>

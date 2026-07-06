@@ -9,7 +9,8 @@ import {
 } from "lucide-react";
 import { Panel, StatCard, DashboardSkeleton } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";
-import { getPatient, patientRecords, patientMedications, upcomingAppointments } from "@/lib/data";
+import { getPatient, patientRecords, patientMedications } from "@/lib/data";
+import { useDemoStore } from "@/lib/data/store";
 
 const recordIcon: Record<string, typeof FileText> = {
   "Lab result": FlaskConical,
@@ -23,6 +24,8 @@ export default function PatientDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const patient = getPatient(id);
+  const appointments = useDemoStore((s) => s.appointments);
+  const upcomingAppointments = appointments.filter((a) => a.status === "scheduled");
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");

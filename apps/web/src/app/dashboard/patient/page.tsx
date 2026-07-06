@@ -13,8 +13,9 @@ import {
 } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";
 import {
-  careServices, upcomingAppointments, patientActivity, careTeam,
+  careServices, patientActivity, careTeam,
 } from "@/lib/data";
+import { useDemoStore } from "@/lib/data/store";
 
 interface PatientProfile {
   full_name: string; phone: string; date_of_birth: string; gender: string; blood_type?: string; email: string;
@@ -24,6 +25,8 @@ export default function PatientDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [profile, setProfile] = useState<PatientProfile | null>(null);
+  const appointments = useDemoStore((s) => s.appointments);
+  const upcomingAppointments = appointments.filter((a) => a.status === "scheduled");
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");

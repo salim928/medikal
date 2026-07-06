@@ -9,10 +9,11 @@ import {
   Activity, HeartPulse, Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { careServices as services, providerOptions } from "@/lib/data";
+import { careServices as services, providerOptions, consultTimes as times } from "@/lib/data";
+import { useDemoStore } from "@/lib/data/store";
+import { useToast } from "@/components/ui/toast";
 
 const doctors = providerOptions();
-const times = ["09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM", "04:00 PM"];
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -26,6 +27,8 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 export default function BookAppointmentPage() {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
+  const bookAppointment = useDemoStore((s) => s.bookAppointment);
+  const toast = useToast();
   const [form, setForm] = useState({
     service: "primary", doctor: "", date: "", time: "", visit: "video", reason: "",
   });
@@ -36,7 +39,32 @@ export default function BookAppointmentPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Your visit has been booked. We'll send a confirmation shortly.");
+    if (!form.time) {
+      toast.error("Please pick a time for your visit");
+      return;
+    }
+    // The provider dropdown holds "Name — Specialty" labels from providerOptions().
+    const [doctorName, specialty = "General Practice"] = form.doctor.split(" — ");
+    const initials = doctorName
+      .replace(/^Dr\.?\s*/i, "")
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+    const prettyDate = new Date(form.date).toLocaleDateString(undefined, {
+      weekday: "short", month: "short", day: "numeric",
+    });
+    bookAppointment({
+      doctor: doctorName,
+      specialty,
+      date: prettyDate,
+      time: form.time,
+      mode: form.visit === "video" ? "Video" : "In-person",
+      initials,
+      reason: form.reason,
+    });
+    toast.success(`Visit booked with ${doctorName} — ${prettyDate} at ${form.time}`);
     router.push("/appointments");
   };
 
