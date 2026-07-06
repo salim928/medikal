@@ -59,7 +59,7 @@ export default function PrescriptionDetailsPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       {/* Header */}
-      <div className="rounded-lg border border-brand-500/30 bg-gradient-to-r from-brand-500/10 to-brand-500/10 p-6">
+      <div className="pb-1">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <Pill className="h-8 w-8 text-brand-600" />
@@ -134,7 +134,7 @@ export default function PrescriptionDetailsPage() {
         </h2>
         <p className="mb-4 text-slate-600">{prescription.instructions}</p>
         {prescription.prescribedFor && (
-          <div className="mt-4 rounded-lg border border-blue-500/30 bg-brand-500/10 p-3">
+          <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-3">
             <p className="text-sm text-slate-500">Prescribed for:</p>
             <p className="text-ink">{prescription.prescribedFor}</p>
           </div>

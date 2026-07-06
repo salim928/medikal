@@ -56,7 +56,7 @@ export default function AddClinicalNotePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-brand-500/30">
+      <div className="pb-1">
         <div className="flex items-center gap-3">
           <FileText className="w-8 h-8 text-brand-600" />
           <div>
@@ -67,7 +67,7 @@ export default function AddClinicalNotePage() {
       </div>
 
       {/* Info Box */}
-      <div className="bg-brand-500/10 border border-blue-500/30 rounded-lg p-4">
+      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
         <p className="text-slate-600">
           <strong className="text-ink">Note:</strong> Clinical notes become part of the patient's permanent medical record and are visible to the patient.
         </p>

@@ -140,7 +140,7 @@ export default function HelpPage() {
     <div className="min-h-screen bg-canvas py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-8 border border-slate-200 mb-8 text-center">
+        <div className="pb-1">
           <HelpCircle className="w-16 h-16 text-brand-600 mx-auto mb-4" />
           <h1 className="text-4xl font-bold text-ink mb-2">Help Center</h1>
           <p className="text-slate-600 text-lg">
@@ -267,7 +267,7 @@ export default function HelpPage() {
         </div>
 
         {/* Contact Support */}
-        <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-8 border border-blue-500/30">
+        <div className="pb-1">
           <div className="text-center mb-6">
             <MessageSquare className="w-12 h-12 text-brand-600 mx-auto mb-3" />
             <h2 className="text-2xl font-bold text-ink mb-2">Still Need Help?</h2>

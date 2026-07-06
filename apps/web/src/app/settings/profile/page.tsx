@@ -59,7 +59,7 @@ export default function ProfileSettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-slate-200 backdrop-blur">
+      <div className="pb-1">
         <div className="flex items-center gap-3">
           <User className="w-8 h-8 text-brand-600" />
           <div>

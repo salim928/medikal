@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { pharmacies } from '@/lib/data';
+import { MapPin, Phone, Clock, Ruler, Star } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 
 export default function PharmaciesPage() {
@@ -70,27 +71,27 @@ export default function PharmaciesPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-amber-500">★</span>
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                   <span className="text-ink font-semibold">{pharmacy.rating}</span>
                 </div>
               </div>
 
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2">
-                  <span className="text-brand-600 text-sm">📍</span>
+                  <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600" />
                   <span className="text-slate-600 text-sm">{pharmacy.address}, {pharmacy.city}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-brand-600 text-sm">📞</span>
+                  <Phone className="h-4 w-4 flex-shrink-0 text-brand-600" />
                   <span className="text-slate-600 text-sm">{pharmacy.phone}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-brand-600 text-sm">🕒</span>
+                  <Clock className="h-4 w-4 flex-shrink-0 text-brand-600" />
                   <span className="text-slate-600 text-sm">{pharmacy.openHours}</span>
                 </div>
                 {pharmacy.distance && (
                   <div className="flex items-center gap-2">
-                    <span className="text-brand-600 text-sm">📏</span>
+                    <Ruler className="h-4 w-4 flex-shrink-0 text-brand-600" />
                     <span className="text-slate-600 text-sm">{pharmacy.distance} away</span>
                   </div>
                 )}

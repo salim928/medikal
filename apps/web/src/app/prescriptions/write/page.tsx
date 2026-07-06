@@ -70,7 +70,7 @@ export default function WritePrescriptionPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-brand-500/30">
+      <div className="pb-1">
         <div className="flex items-center gap-3">
           <Pill className="w-8 h-8 text-brand-600" />
           <div>

@@ -61,7 +61,7 @@ export default function RecordsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-slate-200 bg-gradient-to-r from-brand-500/10 to-brand-500/10 p-6">
+      <div className="pb-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <FileText className="h-8 w-8 text-brand-600" />

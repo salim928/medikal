@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
     <div className="min-h-screen bg-canvas py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-8 border border-slate-200 mb-8">
+        <div className="pb-1">
           <div className="flex items-center gap-4 mb-4">
             <Shield className="w-12 h-12 text-brand-600" />
             <div>

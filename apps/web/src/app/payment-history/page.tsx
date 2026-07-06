@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { transactions, type TransactionType } from '@/lib/data';
+import { Wallet, BarChart3, CheckCircle2, Stethoscope, ClipboardList, Pill, CreditCard, Inbox, Download } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 
 export default function PaymentHistoryPage() {
@@ -32,26 +33,26 @@ export default function PaymentHistoryPage() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'consultation':
-        return '👨‍⚕️';
+        return <Stethoscope className="h-8 w-8 text-brand-600" />;
       case 'subscription':
-        return '📋';
+        return <ClipboardList className="h-8 w-8 text-brand-600" />;
       case 'prescription':
-        return '💊';
+        return <Pill className="h-8 w-8 text-brand-600" />;
       default:
-        return '💳';
+        return <CreditCard className="h-8 w-8 text-brand-600" />;
     }
   };
 
-  const getPaymentMethodLogo = (method: string) => {
+  const paymentMethodLabel = (method: string) => {
     switch (method) {
       case 'paystack':
-        return 'PAY';
+        return 'Paystack';
       case 'stripe':
-        return '💳';
+        return 'Card (Stripe)';
       case 'mobile_money':
-        return 'MM';
+        return 'Mobile Money';
       default:
-        return '💰';
+        return method;
     }
   };
 
@@ -73,7 +74,7 @@ export default function PaymentHistoryPage() {
           <div className="bg-white backdrop-blur-sm border border-slate-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-slate-500 text-sm">Total Spent</span>
-              <span className="text-2xl">💰</span>
+              <Wallet className="h-6 w-6 text-brand-600" />
             </div>
             <div className="text-3xl font-bold text-brand-600">
               GH₵ {totalSpent.toFixed(2)}
@@ -83,7 +84,7 @@ export default function PaymentHistoryPage() {
           <div className="bg-white backdrop-blur-sm border border-slate-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-slate-500 text-sm">Total Transactions</span>
-              <span className="text-2xl">📊</span>
+              <BarChart3 className="h-6 w-6 text-brand-600" />
             </div>
             <div className="text-3xl font-bold text-ink">{transactions.length}</div>
           </div>
@@ -91,7 +92,7 @@ export default function PaymentHistoryPage() {
           <div className="bg-white backdrop-blur-sm border border-slate-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-slate-500 text-sm">Success Rate</span>
-              <span className="text-2xl">✅</span>
+              <CheckCircle2 className="h-6 w-6 text-emerald-600" />
             </div>
             <div className="text-3xl font-bold text-emerald-600">
               {transactions.length > 0
@@ -154,7 +155,7 @@ export default function PaymentHistoryPage() {
         <div className="space-y-4">
           {filteredTransactions.length === 0 ? (
             <div className="text-center py-12 bg-mist backdrop-blur-sm border border-slate-200 rounded-xl">
-              <div className="text-6xl mb-4">📭</div>
+              <Inbox className="mx-auto mb-4 h-14 w-14 text-slate-300" />
               <p className="text-slate-500 text-lg">No transactions found</p>
             </div>
           ) : (
@@ -165,7 +166,7 @@ export default function PaymentHistoryPage() {
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-start gap-4">
-                    <div className="text-4xl">{getTypeIcon(transaction.type)}</div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50">{getTypeIcon(transaction.type)}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold text-ink capitalize">
@@ -194,7 +195,7 @@ export default function PaymentHistoryPage() {
                         {transaction.currency} {transaction.amount.toFixed(2)}
                       </div>
                       <div className="text-xs text-slate-500 font-semibold mt-1">
-                        {getPaymentMethodLogo(transaction.paymentMethod)} {transaction.paymentMethod}
+                        {paymentMethodLabel(transaction.paymentMethod)}
                       </div>
                     </div>
 

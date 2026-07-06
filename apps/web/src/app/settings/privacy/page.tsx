@@ -112,7 +112,7 @@ export default function PrivacySettingsPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-slate-200">
+      <div className="pb-1">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-brand-50 rounded-lg border border-slate-200">
             <Shield className="w-8 h-8 text-brand-600" />

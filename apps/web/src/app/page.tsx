@@ -208,7 +208,7 @@ const reasons = [
   { icon: Clock, title: "Convenient", body: "Care on your time, from wherever you are." },
   { icon: DollarSign, title: "Affordable", body: "Transparent pricing with no surprise bills." },
   { icon: Lock, title: "Secure & Private", body: "Your data is protected every step of the way." },
-  { icon: Star, title: "Top Rated Doctors", body: "U.S. licensed, board-certified providers." },
+  { icon: Star, title: "Top Rated Doctors", body: "Licensed, board-certified providers." },
   { icon: ShieldCheck, title: "Insurance Friendly", body: "We accept most major insurance plans." },
 ];
 
@@ -240,19 +240,19 @@ function Stats() {
     { icon: Users, value: "500,000+", label: "Patients served" },
     { icon: Star, value: "4.9/5", label: "Average patient rating" },
     { icon: HeartPulse, value: "98%", label: "Visit satisfaction rate" },
-    { icon: MapPin, value: "50 States", label: "Available across the U.S." },
+    { icon: MapPin, value: "16 Regions", label: "Available across Ghana" },
   ];
   return (
-    <section className="bg-brand-600 py-16 text-white">
+    <section className="bg-navy py-16 text-white">
       <div className="container text-center">
-        <p className="text-sm font-semibold uppercase tracking-wider text-brand-200">Trusted by thousands</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-blue-300">Trusted by thousands</p>
         <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">Care you can count on</h2>
         <div className="mt-12 grid grid-cols-2 gap-8 lg:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label}>
-              <s.icon className="mx-auto h-7 w-7 text-brand-200" />
+              <s.icon className="mx-auto h-7 w-7 text-blue-300" />
               <div className="mt-3 font-display text-3xl font-bold sm:text-4xl">{s.value}</div>
-              <div className="mt-1 text-sm text-brand-100">{s.label}</div>
+              <div className="mt-1 text-sm text-slate-300">{s.label}</div>
             </div>
           ))}
         </div>
@@ -351,7 +351,7 @@ function Testimonials() {
 
 /* ----------------------------- Insurance ------------------------------- */
 function Insurance() {
-  const plans = ["aetna", "Anthem", "Cigna", "UnitedHealthcare", "Humana"];
+  const plans = ["NHIS", "GLICO Healthcare", "Acacia Health", "Nationwide Medical", "Premier Health"];
   return (
     <section className="bg-white py-14">
       <div className="container text-center">
@@ -380,7 +380,7 @@ function Footer() {
       <div className="container grid gap-10 py-16 md:grid-cols-5">
         <div className="md:col-span-1">
           <Logo light />
-          <p className="mt-4 max-w-xs text-sm text-brand-100">Making quality healthcare accessible, convenient, and personal for everyone.</p>
+          <p className="mt-4 max-w-xs text-sm text-slate-300">Making quality healthcare accessible, convenient, and personal for everyone.</p>
           <div className="mt-5 flex gap-3">
             {[Facebook, Twitter, Instagram, Linkedin, Youtube].map((Icon, i) => (
               <a key={i} href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"><Icon className="h-4 w-4" /></a>
@@ -390,14 +390,14 @@ function Footer() {
         {cols.map((c) => (
           <div key={c.h}>
             <h4 className="font-display text-sm font-semibold uppercase tracking-wide text-white">{c.h}</h4>
-            <ul className="mt-4 space-y-2.5 text-sm text-brand-100">
+            <ul className="mt-4 space-y-2.5 text-sm text-slate-300">
               {c.items.map((i) => (<li key={i}><a href="#" className="transition hover:text-white">{i}</a></li>))}
             </ul>
           </div>
         ))}
       </div>
       <div className="border-t border-white/10">
-        <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm text-brand-100 sm:flex-row">
+        <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm text-slate-400 sm:flex-row">
           <p>© {new Date().getFullYear()} medicom. All rights reserved.</p>
           <p className="flex items-center gap-4">
             <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4" /> HIPAA Compliant</span>

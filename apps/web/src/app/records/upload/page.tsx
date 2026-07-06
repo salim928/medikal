@@ -68,7 +68,7 @@ export default function UploadRecordPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-slate-200">
+      <div className="pb-1">
         <div className="flex items-center gap-3">
           <Upload className="w-8 h-8 text-brand-600" />
           <div>
@@ -79,7 +79,7 @@ export default function UploadRecordPage() {
       </div>
 
       {/* Info Box */}
-      <div className="bg-brand-500/10 border border-blue-500/30 rounded-lg p-4">
+      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
         <div className="flex gap-3">
           <AlertCircle className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-slate-600">
@@ -180,7 +180,7 @@ export default function UploadRecordPage() {
         </div>
 
         {/* Privacy Notice */}
-        <div className="bg-brand-500/10 border border-brand-500/30 rounded-lg p-4">
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-slate-600">

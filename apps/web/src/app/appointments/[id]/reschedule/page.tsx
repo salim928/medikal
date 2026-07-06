@@ -59,7 +59,7 @@ export default function ReschedulePage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <div className="rounded-lg border border-blue-500/30 bg-gradient-to-r from-brand-500/10 to-brand-500/10 p-6">
+      <div className="pb-1">
         <h1 className="font-display text-3xl font-bold text-ink">Reschedule appointment</h1>
         <p className="mt-1 text-slate-600">
           {appointment.doctor} · currently {appointment.date} at {appointment.time}

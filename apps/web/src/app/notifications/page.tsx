@@ -102,7 +102,7 @@ export default function NotificationsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-brand-500/10 to-brand-500/10 rounded-lg p-6 border border-slate-200">
+      <div className="pb-1">
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-brand-50 rounded-lg border border-slate-200">

@@ -1,0 +1,120 @@
+import { test, expect, type Page } from "@playwright/test";
+
+/**
+ * Route smoke suite — every page renders with a key heading and no error
+ * boundary, as both demo roles, plus the end-to-end booking flow.
+ */
+
+const demoCookie = (role: string) => ({
+  name: "mc-demo",
+  value: role,
+  domain: "localhost",
+  path: "/",
+});
+
+async function assertHealthy(page: Page, path: string, marker: string | RegExp) {
+  await page.goto(path);
+  await expect(page.getByText(marker).first()).toBeVisible({ timeout: 20000 });
+  await expect(page.getByText("Something Went Wrong")).toHaveCount(0);
+  await expect(page.getByText("Application error")).toHaveCount(0);
+}
+
+test.describe("public pages", () => {
+  test("landing renders", async ({ page }) => {
+    await assertHealthy(page, "/", /Healthcare/);
+  });
+  test("login renders", async ({ page }) => {
+    await assertHealthy(page, "/login", /medicom|Sign in|Welcome/i);
+  });
+  test("help / privacy / terms render", async ({ page }) => {
+    await assertHealthy(page, "/help", /Help|FAQ|support/i);
+    await assertHealthy(page, "/privacy", /Privacy/i);
+    await assertHealthy(page, "/terms", /Terms/i);
+  });
+});
+
+test.describe("patient routes", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test.beforeEach(async ({ context }) => {
+    await context.addCookies([demoCookie("patient")]);
+  });
+
+  const routes: [string, string | RegExp][] = [
+    ["/dashboard/patient", /Good (morning|afternoon|evening)/],
+    ["/appointments", /My appointments/i],
+    ["/appointments/book", /Book a visit/i],
+    ["/providers", /healthcare provider/i],
+    ["/providers/1", /Dr\. Sarah Johnson/],
+    ["/prescriptions", /My prescriptions/i],
+    ["/prescriptions/1", /Amoxicillin/],
+    ["/records", /medical records/i],
+    ["/records/1", /Blood Test Results/],
+    ["/pharmacies", /Licensed Pharmacies/i],
+    ["/verify-drug", /Drug Authentication/i],
+    ["/symptom-checker", /symptom/i],
+    ["/notifications", /Notifications/],
+    ["/subscriptions", /Health Plan/i],
+    ["/payment-history", /Payment History/i],
+    ["/settings/profile", /Profile/i],
+    ["/settings/security", /Security|Password/i],
+  ];
+
+  for (const [path, marker] of routes) {
+    test(`renders ${path}`, async ({ page }) => {
+      await assertHealthy(page, path, marker);
+    });
+  }
+
+  test("not-found states for bad ids", async ({ page }) => {
+    await assertHealthy(page, "/providers/999", /Provider not found/);
+    await assertHealthy(page, "/prescriptions/999", /Prescription not found/);
+    await assertHealthy(page, "/records/999", /Record not found/);
+    await assertHealthy(page, "/appointments/zzz", /Appointment not found/);
+  });
+
+  test("book → appears in list → cancel flow", async ({ page }) => {
+    await page.goto("/appointments/book");
+    await page.locator("select").selectOption({ index: 1 });
+    await page.fill('input[type="date"]', "2026-08-20");
+    await page.click('button:has-text("10:00 AM")');
+    await page.fill("textarea", "Smoke test booking");
+    await page.click('button:has-text("Confirm booking")');
+    await page.waitForURL("**/appointments");
+
+    // New booking is visible
+    await expect(page.getByText("Aug 20").first()).toBeVisible();
+
+    // Cancel it and verify status flips
+    await page.locator('button:has-text("Cancel")').first().click();
+    await expect(page.getByText(/cancelled/i).first()).toBeVisible();
+  });
+});
+
+test.describe("doctor routes", () => {
+  test.beforeEach(async ({ context }) => {
+    await context.addCookies([demoCookie("doctor")]);
+  });
+
+  const routes: [string, string | RegExp][] = [
+    ["/dashboard/doctor", /Good (morning|afternoon|evening), Dr\./],
+    ["/appointments", /Appointment management/i],
+    ["/triage-queue", /AI triage queue/i],
+    ["/patients", /Patients/],
+    ["/patients/1", /John Parker/],
+    ["/prescriptions/write", /Write Prescription/i],
+    ["/appointments/availability", /Set Availability/i],
+  ];
+
+  for (const [path, marker] of routes) {
+    test(`renders ${path}`, async ({ page }) => {
+      await assertHealthy(page, path, marker);
+    });
+  }
+
+  test("triage approve action works", async ({ page }) => {
+    await page.goto("/triage-queue");
+    await page.locator('button:has-text("Approve recommendation")').first().click();
+    await expect(page.getByText(/Review complete/i).first()).toBeVisible();
+  });
+});
