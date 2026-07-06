@@ -7,15 +7,13 @@
  * server can never read, so every authenticated API call returned 401.
  */
 import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY). Check .env.local."
-  );
-}
+/** True when a Supabase backend is configured; demo mode works without one. */
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 // Fetch with a hard timeout so a slow/unreachable backend fails fast instead of
 // hanging the UI (important while the app has no live Supabase project).
@@ -28,10 +26,22 @@ const timeoutFetch: typeof fetch = (input, init) => {
 };
 
 export function createClient() {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error(
+      "Supabase is not configured (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY). Demo mode does not need it — check isSupabaseConfigured before calling."
+    );
+  }
   return createBrowserClient(supabaseUrl, supabaseAnonKey, {
     global: { fetch: timeoutFetch },
   });
 }
 
-// Singleton browser client for convenience (safe: createBrowserClient is memoized per params).
-export const supabase = createClient();
+// Lazy singleton via Proxy: importing this module never throws — only actually
+// touching the client without configuration does. Demo mode imports it freely.
+let _client: SupabaseClient | null = null;
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    if (!_client) _client = createClient();
+    return Reflect.get(_client, prop, _client);
+  },
+});

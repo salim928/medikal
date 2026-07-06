@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { supabase } from "@/lib/auth";
+import { supabase } from "@/lib/auth-fresh";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();

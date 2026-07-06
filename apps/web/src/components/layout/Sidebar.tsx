@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { useAuth } from "@/hooks/useAuth-fresh";
+import { useAuth } from "@/hooks/useAuth";
 import { signOut as authSignOut } from "@/lib/auth-fresh";
 import { clearDemoSession } from "@/lib/demo";
 import { cn } from "@/lib/utils";

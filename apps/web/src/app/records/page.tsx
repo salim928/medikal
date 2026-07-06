@@ -2,13 +2,12 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useAuth } from "@/hooks/useAuth-fresh";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useMedicalRecords } from "@/hooks/useMedicalRecords";
 import { Button } from "@/components/ui/Button";
 import { FileText, Upload, Download, Search, Plus, Eye } from "lucide-react";
-import type { RecordType } from "@/lib/data";
+import { medicalRecords, type RecordType } from "@/lib/data";
 
 const filterTypes: { id: "all" | RecordType; label: string }[] = [
   { id: "all", label: "All" },
@@ -20,7 +19,7 @@ const filterTypes: { id: "all" | RecordType; label: string }[] = [
 
 export default function RecordsPage() {
   const { isAuthenticated, loading, role } = useAuth();
-  const { records, isLoading } = useMedicalRecords();
+  const records = medicalRecords;
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<"all" | RecordType>("all");
@@ -49,7 +48,7 @@ export default function RecordsPage() {
 
   const countByType = (type: RecordType) => records.filter((r) => r.type === type).length;
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <div className="text-center">

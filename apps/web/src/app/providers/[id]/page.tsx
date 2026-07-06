@@ -6,7 +6,7 @@ import {
   Star, MapPin, Clock, CheckCircle, GraduationCap, Languages, ArrowLeft, CalendarPlus,
 } from 'lucide-react';
 import PaymentModal from '@/components/payment/PaymentModal';
-import { useAuth } from '@/hooks/useAuth-fresh';
+import { useAuth } from '@/hooks/useAuth';
 import { getProvider, consultTimes, providerReviews } from '@/lib/data';
 
 export default function ProviderProfilePage() {

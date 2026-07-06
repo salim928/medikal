@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from "@/hooks/useAuth-fresh";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Pill, Plus, Search, FileText, Download, RefreshCw, AlertCircle } from "lucide-react";

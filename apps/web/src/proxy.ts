@@ -7,11 +7,9 @@ const protectedRoutes = [
   "/dashboard",
   "/appointments",
   "/records",
-  "/provider",
   "/providers",
   "/patients",
   "/prescriptions",
-  "/admin",
   "/settings",
   "/symptom-checker",
   "/pharmacies",
@@ -25,13 +23,13 @@ const protectedRoutes = [
 // Auth pages an already-authenticated user should be bounced away from.
 const authRoutes = ["/login", "/signup"];
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function buildCsp(): string {
   const supaHost = (() => {
     try {
-      return new URL(supabaseUrl).origin;
+      return supabaseUrl ? new URL(supabaseUrl).origin : "";
     } catch {
       return "";
     }
@@ -55,7 +53,7 @@ function buildCsp(): string {
     .trim();
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Let the Supabase auth callback and static assets through untouched.
@@ -63,14 +61,27 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isProtectedPath = protectedRoutes.some((r) => path === r || path.startsWith(`${r}/`));
-  const isAuthPath = authRoutes.some((r) => path === r || path.startsWith(`${r}/`));
+  const isProtected = protectedRoutes.some((r) => path === r || path.startsWith(`${r}/`));
+  const isAuthPage = authRoutes.some((r) => path === r || path.startsWith(`${r}/`));
 
   // Demo mode: honor the demo cookie without any backend call.
   const demoRole = request.cookies.get(DEMO_COOKIE)?.value;
   if (isDemoRole(demoRole)) {
-    if (isAuthPath) {
+    if (isAuthPage) {
       return NextResponse.redirect(new URL(`/dashboard/${demoRole}`, request.url));
+    }
+    const res = NextResponse.next({ request });
+    res.headers.set("Content-Security-Policy", buildCsp());
+    return res;
+  }
+
+  // No Supabase configured (pure demo deployment): treat every visitor as
+  // unauthenticated — protected pages bounce to /login, everything else passes.
+  if (!supabaseUrl || !supabaseAnonKey) {
+    if (isProtected) {
+      const redirectUrl = new URL("/login", request.url);
+      redirectUrl.searchParams.set("redirectTo", path);
+      return NextResponse.redirect(redirectUrl);
     }
     const res = NextResponse.next({ request });
     res.headers.set("Content-Security-Policy", buildCsp());
@@ -99,11 +110,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const isProtected = protectedRoutes.some(
-    (r) => path === r || path.startsWith(`${r}/`)
-  );
-  const isAuthPage = authRoutes.some((r) => path === r || path.startsWith(`${r}/`));
 
   if (!user && isProtected) {
     const redirectUrl = new URL("/login", request.url);

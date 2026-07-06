@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth-fresh";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
