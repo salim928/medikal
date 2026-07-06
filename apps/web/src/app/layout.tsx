@@ -3,6 +3,7 @@ import { Inter, Lexend } from "next/font/google";
 import "@/styles/globals.css";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ToastProvider } from "@/components/ui/toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -48,7 +49,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${lexend.variable}`}>
       <body className="min-h-screen font-sans antialiased bg-canvas text-ink">
         <QueryProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>

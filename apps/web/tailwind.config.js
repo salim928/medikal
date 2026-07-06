@@ -13,6 +13,12 @@ module.exports = {
     'lg:w-60', 'lg:w-[68px]', 'w-60', 'lg:justify-center', 'lg:px-0', 'lg:block',
     'lg:hidden', 'lg:flex-col', 'lg:gap-2', '-translate-x-full', 'translate-x-0',
     'flex-1', 'min-w-0',
+    // Status badge tokens (see src/lib/ui/status.ts) — used via dynamic lookup.
+    'bg-blue-50', 'text-blue-700', 'border-blue-200',
+    'bg-emerald-50', 'text-emerald-700', 'border-emerald-200',
+    'bg-slate-100', 'text-slate-600', 'border-slate-200',
+    'bg-red-50', 'text-red-700', 'border-red-200',
+    'bg-amber-50', 'text-amber-700', 'border-amber-200',
   ],
   theme: {
     container: {

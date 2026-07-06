@@ -34,6 +34,9 @@ export interface Appointment {
   mode: VisitMode;
   initials: string;
   status: AppointmentStatus;
+  /** Patient shown on provider-facing views. */
+  patient?: string;
+  reason?: string;
 }
 
 export interface Prescription {
@@ -361,3 +364,229 @@ export const medicalRecords: MedicalRecord[] = [
 export function getMedicalRecord(id: string): MedicalRecord | null {
   return medicalRecords.find((r) => r.id === id) ?? null;
 }
+
+/* ------------------------------ appointments ----------------------------- */
+/* Full seed for the interactive demo store (see ./store.ts). */
+
+export const appointmentSeed: Appointment[] = [
+  { id: "a1", doctor: "Dr. Amara Mensah", specialty: "General Practitioner", date: "Today", time: "3:30 PM", mode: "Video", initials: "AM", status: "scheduled", patient: "John Parker", reason: "Follow-up on blood pressure" },
+  { id: "a2", doctor: "Dr. Kwame Osei", specialty: "Dermatology", date: "Thu, Jul 4", time: "10:00 AM", mode: "In-person", initials: "KO", status: "scheduled", patient: "Mariam Ahmed", reason: "Skin rash assessment" },
+  { id: "a3", doctor: "Dr. Sarah Johnson", specialty: "General Physician", date: "Jun 20, 2026", time: "11:00 AM", mode: "Video", initials: "SJ", status: "completed", patient: "John Parker", reason: "Annual check-up" },
+  { id: "a4", doctor: "Dr. Kwame Asante", specialty: "Mental Health", date: "Jun 12, 2026", time: "2:00 PM", mode: "Video", initials: "KA", status: "completed", patient: "Grace Danso", reason: "Therapy session" },
+  { id: "a5", doctor: "Dr. James Wilson", specialty: "Cardiology", date: "May 30, 2026", time: "9:00 AM", mode: "In-person", initials: "JW", status: "cancelled", patient: "Louis Tanoh", reason: "Cardiac review" },
+];
+
+/* ------------------------------ notifications ---------------------------- */
+
+export type NotificationType = "appointment" | "prescription" | "record" | "system" | "video";
+export type NotificationPriority = "low" | "medium" | "high";
+
+export interface AppNotification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+  actionUrl?: string;
+  priority: NotificationPriority;
+}
+
+const hoursAgo = (h: number) => new Date(Date.now() - h * 60 * 60 * 1000).toISOString();
+
+export const notificationSeed: AppNotification[] = [
+  { id: "n1", type: "appointment", title: "Upcoming appointment", message: "Your video consultation with Dr. Amara Mensah is scheduled for today at 3:30 PM.", timestamp: hoursAgo(2), read: false, actionUrl: "/appointments", priority: "high" },
+  { id: "n2", type: "prescription", title: "Prescription ready", message: "Your prescription for Amoxicillin is ready for pickup at City Central Pharmacy.", timestamp: hoursAgo(5), read: false, actionUrl: "/prescriptions", priority: "medium" },
+  { id: "n3", type: "record", title: "Lab results available", message: "Your Full Blood Count results are now available to view.", timestamp: hoursAgo(24), read: true, actionUrl: "/records", priority: "medium" },
+  { id: "n4", type: "system", title: "Profile updated", message: "Your profile information has been successfully updated.", timestamp: hoursAgo(48), read: true, priority: "low" },
+  { id: "n5", type: "video", title: "Visit summary ready", message: "The summary of your video visit with Dr. Mensah is available.", timestamp: hoursAgo(72), read: true, actionUrl: "/records", priority: "low" },
+];
+
+/* -------------------------------- pharmacies ----------------------------- */
+
+export interface Pharmacy {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  phone: string;
+  rating: number;
+  licensed: boolean;
+  openHours: string;
+  services: string[];
+  distance?: string;
+}
+
+export const pharmacies: Pharmacy[] = [
+  { id: "1", name: "City Central Pharmacy", address: "123 Independence Avenue", city: "Accra", phone: "+233 20 123 4567", rating: 4.8, licensed: true, openHours: "8:00 AM – 10:00 PM", services: ["Prescription filling", "Home delivery", "Consultation"], distance: "2.3 km" },
+  { id: "2", name: "MediCare Plus Pharmacy", address: "45 Ring Road East", city: "Accra", phone: "+233 24 987 6543", rating: 4.6, licensed: true, openHours: "24 hours", services: ["Prescription filling", "Home delivery", "Lab tests"], distance: "3.8 km" },
+  { id: "3", name: "HealthFirst Pharmacy", address: "78 Kumasi High Street", city: "Kumasi", phone: "+233 26 555 0123", rating: 4.7, licensed: true, openHours: "7:00 AM – 9:00 PM", services: ["Prescription filling", "Vaccinations", "Health screening"], distance: "1.5 km" },
+  { id: "4", name: "WellCare Chemists", address: "12 Osu Oxford Street", city: "Accra", phone: "+233 20 777 8899", rating: 4.5, licensed: true, openHours: "8:00 AM – 11:00 PM", services: ["Prescription filling", "Home delivery", "Mobile money payment"], distance: "4.1 km" },
+];
+
+/* -------------------------------- billing -------------------------------- */
+
+export type TransactionType = "consultation" | "subscription" | "prescription";
+export type TransactionStatus = "success" | "pending" | "failed";
+export type PaymentMethod = "paystack" | "stripe" | "mobile_money";
+
+export interface Transaction {
+  id: string;
+  reference: string;
+  type: TransactionType;
+  amount: number;
+  currency: string;
+  status: TransactionStatus;
+  paymentMethod: PaymentMethod;
+  date: string;
+  description: string;
+}
+
+export const transactions: Transaction[] = [
+  { id: "1", reference: "CONSULT-1736935800-482913", type: "consultation", amount: 150, currency: "GHS", status: "success", paymentMethod: "paystack", date: "Jun 28, 2026", description: "Video consultation — Dr. Sarah Johnson" },
+  { id: "2", reference: "SUB-1736429400-118274", type: "subscription", amount: 299, currency: "GHS", status: "success", paymentMethod: "mobile_money", date: "Jun 10, 2026", description: "Family plan — monthly" },
+  { id: "3", reference: "PRESC-1735910200-903561", type: "prescription", amount: 85, currency: "GHS", status: "success", paymentMethod: "paystack", date: "May 30, 2026", description: "Prescription — City Central Pharmacy" },
+  { id: "4", reference: "CONSULT-1735251000-771435", type: "consultation", amount: 100, currency: "GHS", status: "failed", paymentMethod: "stripe", date: "May 22, 2026", description: "Therapy session — Dr. Kwame Asante" },
+];
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description: string;
+  monthlyPrice: number;
+  yearlyPrice: number;
+  features: string[];
+  popular?: boolean;
+  maxFamilyMembers?: number;
+}
+
+export const subscriptionPlans: SubscriptionPlan[] = [
+  {
+    id: "individual", name: "Individual", description: "Everyday care for one person",
+    monthlyPrice: 99, yearlyPrice: 999,
+    features: ["Unlimited video consultations", "24/7 AI symptom checker", "e-Prescriptions", "Medical records storage", "Priority support"],
+  },
+  {
+    id: "family", name: "Family", description: "Cover up to 5 family members", popular: true,
+    monthlyPrice: 299, yearlyPrice: 2999, maxFamilyMembers: 5,
+    features: ["Everything in Individual", "Up to 5 family members", "Pediatric care included", "Family health dashboard", "Shared medical records"],
+  },
+  {
+    id: "premium", name: "Premium", description: "Complete care with specialists",
+    monthlyPrice: 499, yearlyPrice: 4999, maxFamilyMembers: 8,
+    features: ["Everything in Family", "Specialist consultations", "Annual health screening", "Home visit coordination", "Dedicated care manager"],
+  },
+];
+
+/* ------------------------------- verify-drug ------------------------------ */
+
+export interface DrugInfo {
+  name: string;
+  manufacturer: string;
+  batchNumber: string;
+  manufactureDate: string;
+  expiryDate: string;
+  fdaRegistration: string;
+  status: "Authentic" | "Counterfeit" | "Not Found";
+  warnings?: string[];
+}
+
+/** Demo Ghana-FDA registry keyed by batch number. */
+export const drugRegistry: Record<string, DrugInfo> = {
+  "FDA-AMX-2024-001": {
+    name: "Amoxicillin 500mg Capsules", manufacturer: "Danadams Pharmaceutical Industry Ltd",
+    batchNumber: "FDA-AMX-2024-001", manufactureDate: "2024-01-15", expiryDate: "2026-01-14",
+    fdaRegistration: "FDA-GH-2024-A123", status: "Authentic",
+  },
+  "FDA-IBU-2023-045": {
+    name: "Ibuprofen 400mg Tablets", manufacturer: "Ernest Chemists Ltd",
+    batchNumber: "FDA-IBU-2023-045", manufactureDate: "2023-06-20", expiryDate: "2025-06-19",
+    fdaRegistration: "FDA-GH-2023-B456", status: "Authentic",
+  },
+  "FAKE-123-456": {
+    name: "Unknown Product", manufacturer: "Unregistered Manufacturer",
+    batchNumber: "FAKE-123-456", manufactureDate: "Unknown", expiryDate: "Unknown",
+    fdaRegistration: "Not Registered", status: "Counterfeit",
+    warnings: ["This product is not registered with Ghana FDA", "May contain harmful substances", "Do not consume"],
+  },
+};
+
+export function lookupDrug(batch: string): DrugInfo {
+  return (
+    drugRegistry[batch] ?? {
+      name: "Unknown", manufacturer: "Unknown", batchNumber: batch,
+      manufactureDate: "Unknown", expiryDate: "Unknown", fdaRegistration: "Not found",
+      status: "Not Found",
+      warnings: ["Batch number not found in the Ghana FDA registry", "Verify the number and try again, or report the product"],
+    }
+  );
+}
+
+/* -------------------------------- triage --------------------------------- */
+
+export type RiskLevel = "high" | "medium" | "low";
+export type TriageStatus = "pending" | "approved" | "modified" | "rejected";
+
+export interface TriageSubmission {
+  id: string;
+  patientName: string;
+  patientEmail: string;
+  submittedAt: string;
+  symptoms: string[];
+  riskLevel: RiskLevel;
+  aiDiagnosis: string;
+  aiRecommendations: string[];
+  status: TriageStatus;
+}
+
+export const triageSeed: TriageSubmission[] = [
+  {
+    id: "t1", patientName: "Mariam Ahmed", patientEmail: "mariam.ahmed@email.com",
+    submittedAt: "Today, 09:30 AM",
+    symptoms: ["High fever (39°C)", "Severe headache", "Body aches", "Fatigue"],
+    riskLevel: "high", aiDiagnosis: "Possible malaria or severe viral infection",
+    aiRecommendations: ["Urgent consultation recommended within 4 hours", "Rapid malaria test advised", "Monitor temperature every 2 hours", "Increase fluid intake"],
+    status: "pending",
+  },
+  {
+    id: "t2", patientName: "Sam Kofi", patientEmail: "sam.kofi@email.com",
+    submittedAt: "Today, 08:15 AM",
+    symptoms: ["Mild cough", "Runny nose", "Sneezing", "Sore throat"],
+    riskLevel: "low", aiDiagnosis: "Common cold (viral upper respiratory infection)",
+    aiRecommendations: ["Rest and hydration", "Over-the-counter cold relief as needed", "Consult a doctor if symptoms persist beyond 10 days"],
+    status: "pending",
+  },
+  {
+    id: "t3", patientName: "Louis Tanoh", patientEmail: "louis.tanoh@email.com",
+    submittedAt: "Today, 07:45 AM",
+    symptoms: ["Chest pain", "Shortness of breath", "Dizziness", "Nausea"],
+    riskLevel: "high", aiDiagnosis: "Possible cardiac event — requires immediate attention",
+    aiRecommendations: ["EMERGENCY: advise patient to seek immediate in-person care", "Do not schedule as routine video visit", "Flag for cardiologist follow-up"],
+    status: "pending",
+  },
+  {
+    id: "t4", patientName: "Akosua Boateng", patientEmail: "akosua.b@email.com",
+    submittedAt: "Yesterday, 04:20 PM",
+    symptoms: ["Mild nausea", "Food cravings", "Fatigue"],
+    riskLevel: "medium", aiDiagnosis: "Consistent with early-pregnancy symptoms (patient in antenatal care)",
+    aiRecommendations: ["Route to antenatal team", "Schedule routine check within one week", "Continue prenatal vitamins"],
+    status: "approved",
+  },
+];
+
+/* --------------------------- settings / security -------------------------- */
+
+export interface SecuritySession {
+  id: string;
+  device: string;
+  location: string;
+  ip: string;
+  lastActive: string;
+  current: boolean;
+}
+
+export const securitySessions: SecuritySession[] = [
+  { id: "s1", device: "Windows PC — Chrome", location: "Accra, Ghana", ip: "154.160.1.24", lastActive: "Now", current: true },
+  { id: "s2", device: "iPhone 15 — Safari", location: "Accra, Ghana", ip: "154.160.3.87", lastActive: "2 hours ago", current: false },
+  { id: "s3", device: "Android — Chrome", location: "Kumasi, Ghana", ip: "41.215.168.9", lastActive: "3 days ago", current: false },
+];
