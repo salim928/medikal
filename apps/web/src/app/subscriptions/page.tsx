@@ -2,17 +2,9 @@
 
 import { useState } from 'react';
 import PaymentModal from '@/components/payment/PaymentModal';
-
-interface SubscriptionPlan {
-  id: string;
-  name: string;
-  description: string;
-  monthlyPrice: number;
-  yearlyPrice: number;
-  features: string[];
-  popular?: boolean;
-  maxFamilyMembers?: number;
-}
+import { subscriptionPlans as plans, type SubscriptionPlan } from '@/lib/data';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/components/ui/toast';
 
 interface FamilyMember {
   id: string;
@@ -23,95 +15,45 @@ interface FamilyMember {
 }
 
 export default function SubscriptionsPage() {
+  const { user } = useAuth();
+  const toast = useToast();
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [currentSubscription, setCurrentSubscription] = useState<any>(null);
+  const [currentSubscription, setCurrentSubscription] = useState<{
+    plan: SubscriptionPlan;
+    billingCycle: 'monthly' | 'yearly';
+    startDate: string;
+    status: string;
+  } | null>(null);
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [showAddMember, setShowAddMember] = useState(false);
   const [newMember, setNewMember] = useState<Partial<FamilyMember>>({});
 
-  // Mock user data
-  const userId = 'user-123';
-  const userEmail = 'user@example.com';
-
-  const plans: SubscriptionPlan[] = [
-    {
-      id: 'individual',
-      name: 'Individual',
-      description: 'Perfect for single users',
-      monthlyPrice: 99,
-      yearlyPrice: 990,
-      maxFamilyMembers: 1,
-      features: [
-        'Unlimited video consultations',
-        'E-prescriptions',
-        'Medical records storage',
-        'Symptom checker access',
-        'Drug verification',
-        'Priority support',
-        '24/7 emergency hotline',
-      ],
-    },
-    {
-      id: 'family',
-      name: 'Family',
-      description: 'Best for families up to 5 members',
-      monthlyPrice: 299,
-      yearlyPrice: 2990,
-      maxFamilyMembers: 5,
-      popular: true,
-      features: [
-        'Everything in Individual',
-        'Up to 5 family members',
-        'Shared medical records',
-        'Family health dashboard',
-        'Appointment scheduling for all',
-        'Pharmacy delivery discounts',
-        'Health insurance integration',
-      ],
-    },
-    {
-      id: 'premium',
-      name: 'Premium',
-      description: 'Ultimate healthcare experience',
-      monthlyPrice: 599,
-      yearlyPrice: 5990,
-      maxFamilyMembers: 10,
-      features: [
-        'Everything in Family',
-        'Up to 10 family members',
-        'Dedicated health manager',
-        'Home visit services',
-        'Lab test at home',
-        'Specialist consultations',
-        'Mental health support',
-        'Wellness programs',
-        'Annual health checkup',
-      ],
-    },
-  ];
+  const userId = user?.id ?? 'demo-user';
+  const userEmail = user?.email ?? 'demo@medicom.app';
 
   const handleSubscribe = (plan: SubscriptionPlan) => {
     setSelectedPlan(plan);
     setShowPaymentModal(true);
   };
 
-  const handlePaymentSuccess = (transaction: any) => {
-    console.log('Subscription payment successful:', transaction);
-    setCurrentSubscription({
-      plan: selectedPlan,
-      billingCycle,
-      startDate: new Date().toISOString(),
-      status: 'active',
-    });
+  const handlePaymentSuccess = () => {
+    if (selectedPlan) {
+      setCurrentSubscription({
+        plan: selectedPlan,
+        billingCycle,
+        startDate: new Date().toISOString(),
+        status: 'active',
+      });
+    }
     setShowPaymentModal(false);
-    alert('Subscription activated successfully!');
+    toast.success('Subscription activated');
   };
 
   const handleAddFamilyMember = () => {
     if (!newMember.name || !newMember.relationship || !newMember.dateOfBirth) {
-      alert('Please fill all required fields');
+      toast.error('Please fill all required fields');
       return;
     }
 
@@ -139,12 +81,12 @@ export default function SubscriptionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-700 via-blue-900 to-brand-600 py-12 px-4">
+    <div className="py-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-ink mb-4">
-            Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-400">Health Plan</span>
+            Choose Your <span className="text-brand-600">Health Plan</span>
           </h1>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
             Access quality healthcare anytime, anywhere. Cancel anytime, no questions asked.
@@ -187,7 +129,7 @@ export default function SubscriptionsPage() {
                   Current Plan: {currentSubscription.plan.name}
                 </h3>
                 <p className="text-slate-600">
-                  Billing: {currentSubscription.billingCycle} • Status: <span className="text-green-400 font-semibold">Active</span>
+                  Billing: {currentSubscription.billingCycle} • Status: <span className="text-emerald-600 font-semibold">Active</span>
                 </p>
               </div>
               <button className="px-4 py-2 bg-mist hover:bg-slate-200 text-ink rounded-lg font-semibold transition">
@@ -222,14 +164,14 @@ export default function SubscriptionsPage() {
                 </div>
 
                 <div className="text-center mb-6">
-                  <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-400 mb-2">
+                  <div className="text-5xl font-bold text-brand-600 mb-2">
                     GH₵ {price}
                   </div>
                   <div className="text-slate-500 text-sm">
                     per {billingCycle === 'monthly' ? 'month' : 'year'}
                   </div>
                   {billingCycle === 'yearly' && (
-                    <div className="text-green-400 text-xs mt-1 font-semibold">
+                    <div className="text-emerald-600 text-xs mt-1 font-semibold">
                       Save GH₵ {savings} per year
                     </div>
                   )}
@@ -240,7 +182,7 @@ export default function SubscriptionsPage() {
                   className={`w-full py-3 rounded-lg font-semibold mb-6 transition ${
                     plan.popular
                       ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white hover:from-brand-700 hover:to-brand-600'
-                      : 'bg-mist text-white hover:bg-slate-200'
+                      : 'bg-mist text-ink hover:bg-slate-200'
                   }`}
                 >
                   {currentSubscription?.plan.id === plan.id ? 'Current Plan' : 'Subscribe Now'}
@@ -281,7 +223,7 @@ export default function SubscriptionsPage() {
                   {familyMembers.length} of {currentSubscription.plan.maxFamilyMembers} members added
                 </p>
               </div>
-              {familyMembers.length < currentSubscription.plan.maxFamilyMembers && (
+              {familyMembers.length < (currentSubscription.plan.maxFamilyMembers ?? 0) && (
                 <button
                   onClick={() => setShowAddMember(true)}
                   className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-semibold transition"

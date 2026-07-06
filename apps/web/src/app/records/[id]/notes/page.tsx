@@ -5,12 +5,15 @@ import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FileText, Save } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
 
 export default function AddClinicalNotePage() {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, role, user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
+  const toast = useToast();
 
   const [noteContent, setNoteContent] = useState("");
   const [saving, setSaving] = useState(false);
@@ -18,12 +21,13 @@ export default function AddClinicalNotePage() {
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       router.push("/login");
+      return;
     }
-    // Only providers can add clinical notes
-    if (user?.role !== "provider" && user?.role !== "doctor") {
+    // Only care providers can add clinical notes.
+    if (!loading && isAuthenticated && role === "patient") {
       router.push(`/records/${id}`);
     }
-  }, [isAuthenticated, loading, user, router, id]);
+  }, [isAuthenticated, loading, role, router, id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,21 +43,15 @@ export default function AddClinicalNotePage() {
     //   }),
     // });
 
-    // Mock save delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    // Simulated save (demo mode — no backend)
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     setSaving(false);
-    alert("Clinical note saved successfully!");
+    toast.success("Clinical note saved");
     router.push(`/records/${id}`);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner />;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -135,7 +133,9 @@ export default function AddClinicalNotePage() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-slate-500">Provider Name</p>
-              <p className="text-ink font-medium">{user?.email || "Provider"}</p>
+              <p className="text-ink font-medium">
+                {(user?.user_metadata?.full_name as string) || user?.email || "Provider"}
+              </p>
             </div>
             <div>
               <p className="text-sm text-slate-500">Date & Time</p>

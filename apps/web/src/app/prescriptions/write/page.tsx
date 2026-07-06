@@ -5,10 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Pill, User, AlertTriangle, CheckCircle } from "lucide-react";
+import { patients } from "@/lib/data";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
 
 export default function WritePrescriptionPage() {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, role } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const [showInteractions, setShowInteractions] = useState(false);
   const [formData, setFormData] = useState({
     patientId: "",
@@ -28,12 +32,13 @@ export default function WritePrescriptionPage() {
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       router.push("/login");
+      return;
     }
-    // Only providers can write prescriptions
-    if (user?.role !== "provider" && user?.role !== "doctor") {
+    // Only care providers can write prescriptions.
+    if (!loading && isAuthenticated && role === "patient") {
       router.push("/prescriptions");
     }
-  }, [isAuthenticated, loading, user, router]);
+  }, [isAuthenticated, loading, role, router]);
 
   const checkDrugInteractions = () => {
     setShowInteractions(true);
@@ -56,18 +61,11 @@ export default function WritePrescriptionPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Submit to API
-    alert("Prescription created successfully! Ready for e-signature.");
+    toast.success("Prescription created — ready for e-signature");
     router.push("/prescriptions");
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner />;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -95,10 +93,12 @@ export default function WritePrescriptionPage() {
             className="w-full px-4 py-3 bg-canvas border border-slate-200 rounded-lg text-ink focus:outline-none focus:border-brand-500"
             required
           >
-            <option value="">Choose a patient...</option>
-            <option value="1">John Doe - john.doe@example.com</option>
-            <option value="2">Emily Rodriguez - emily.r@example.com</option>
-            <option value="3">Robert Chen - robert.c@example.com</option>
+            <option value="">Choose a patient…</option>
+            {patients.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} — {p.email}
+              </option>
+            ))}
           </select>
         </div>
 

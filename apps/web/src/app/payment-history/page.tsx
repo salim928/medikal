@@ -1,103 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fromKobo } from '@/lib/paystack';
-
-interface PaymentTransaction {
-  id: string;
-  reference: string;
-  type: 'consultation' | 'subscription' | 'prescription';
-  amount: number;
-  currency: string;
-  status: 'success' | 'pending' | 'failed';
-  paymentMethod: 'paystack' | 'stripe' | 'mobile_money';
-  date: string;
-  metadata: {
-    appointmentId?: string;
-    doctorName?: string;
-    planName?: string;
-    prescriptionId?: string;
-    pharmacyName?: string;
-  };
-}
+import { useState } from 'react';
+import { transactions, type TransactionType } from '@/lib/data';
+import { useToast } from '@/components/ui/toast';
 
 export default function PaymentHistoryPage() {
-  const [transactions, setTransactions] = useState<PaymentTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'consultation' | 'subscription' | 'prescription'>('all');
-
-  useEffect(() => {
-    fetchPaymentHistory();
-  }, []);
-
-  const fetchPaymentHistory = async () => {
-    try {
-      // Mock data - replace with actual API call
-      const mockTransactions: PaymentTransaction[] = [
-        {
-          id: '1',
-          reference: 'CONSULT-1234567890',
-          type: 'consultation',
-          amount: 150.00,
-          currency: 'GHS',
-          status: 'success',
-          paymentMethod: 'paystack',
-          date: '2024-01-15T10:30:00Z',
-          metadata: {
-            appointmentId: 'APT-001',
-            doctorName: 'Dr. Sarah Johnson',
-          },
-        },
-        {
-          id: '2',
-          reference: 'SUB-9876543210',
-          type: 'subscription',
-          amount: 299.00,
-          currency: 'GHS',
-          status: 'success',
-          paymentMethod: 'mobile_money',
-          date: '2024-01-10T14:20:00Z',
-          metadata: {
-            planName: 'Family Plan',
-          },
-        },
-        {
-          id: '3',
-          reference: 'PRESC-5555666777',
-          type: 'prescription',
-          amount: 85.50,
-          currency: 'GHS',
-          status: 'success',
-          paymentMethod: 'paystack',
-          date: '2024-01-08T09:15:00Z',
-          metadata: {
-            prescriptionId: 'RX-123',
-            pharmacyName: 'City Central Pharmacy',
-          },
-        },
-        {
-          id: '4',
-          reference: 'CONSULT-1111222333',
-          type: 'consultation',
-          amount: 150.00,
-          currency: 'GHS',
-          status: 'pending',
-          paymentMethod: 'stripe',
-          date: '2024-01-05T16:45:00Z',
-          metadata: {
-            appointmentId: 'APT-002',
-            doctorName: 'Dr. Michael Chen',
-          },
-        },
-      ];
-
-      setTransactions(mockTransactions);
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to fetch payment history:', error);
-      setLoading(false);
-    }
-  };
+  const toast = useToast();
+  const [filter, setFilter] = useState<'all' | TransactionType>('all');
 
   const filteredTransactions = transactions.filter(
     (tx) => filter === 'all' || tx.type === filter
@@ -110,13 +19,13 @@ export default function PaymentHistoryPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'success':
-        return 'bg-brand-500/20 text-green-400 border-green-500/50';
+        return 'bg-emerald-50 text-emerald-700 border-emerald-300';
       case 'pending':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+        return 'bg-amber-50 text-amber-700 border-amber-300';
       case 'failed':
-        return 'bg-red-500/20 text-red-600 border-red-500/50';
+        return 'bg-red-50 text-red-700 border-red-300';
       default:
-        return 'bg-slate-500/20 text-slate-500 border-slate-500/50';
+        return 'bg-slate-100 text-slate-600 border-slate-300';
     }
   };
 
@@ -146,33 +55,12 @@ export default function PaymentHistoryPage() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const downloadReceipt = (reference: string) => {
+    toast.info(`Receipt ${reference} will be emailed to you (demo)`);
   };
-
-  const downloadReceipt = (transactionId: string) => {
-    // Implement receipt download
-    console.log('Downloading receipt for:', transactionId);
-    alert('Receipt download feature coming soon!');
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-brand-700 via-blue-900 to-brand-600 flex items-center justify-center">
-        <div className="text-ink text-xl">Loading payment history...</div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-700 via-blue-900 to-brand-600 py-12 px-4">
+    <div className="py-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -205,7 +93,7 @@ export default function PaymentHistoryPage() {
               <span className="text-slate-500 text-sm">Success Rate</span>
               <span className="text-2xl">✅</span>
             </div>
-            <div className="text-3xl font-bold text-green-400">
+            <div className="text-3xl font-bold text-emerald-600">
               {transactions.length > 0
                 ? Math.round(
                     (transactions.filter((tx) => tx.status === 'success').length /
@@ -293,17 +181,9 @@ export default function PaymentHistoryPage() {
                       </div>
                       
                       <div className="space-y-1 text-sm text-slate-500">
-                        {transaction.metadata.doctorName && (
-                          <p>Doctor: {transaction.metadata.doctorName}</p>
-                        )}
-                        {transaction.metadata.planName && (
-                          <p>Plan: {transaction.metadata.planName}</p>
-                        )}
-                        {transaction.metadata.pharmacyName && (
-                          <p>Pharmacy: {transaction.metadata.pharmacyName}</p>
-                        )}
+                        <p>{transaction.description}</p>
                         <p>Reference: {transaction.reference}</p>
-                        <p>Date: {formatDate(transaction.date)}</p>
+                        <p>Date: {transaction.date}</p>
                       </div>
                     </div>
                   </div>
@@ -320,7 +200,7 @@ export default function PaymentHistoryPage() {
 
                     {transaction.status === 'success' && (
                       <button
-                        onClick={() => downloadReceipt(transaction.id)}
+                        onClick={() => downloadReceipt(transaction.reference)}
                         className="px-4 py-2 bg-mist hover:bg-slate-200 text-ink rounded-lg text-sm font-semibold transition flex items-center gap-2"
                       >
                         <svg

@@ -12,17 +12,8 @@ import {
   WelcomeBanner, BannerButton, StatCard, Panel, QuickAction, PersonRow, ActivityFeed, DashboardSkeleton,
 } from "@/components/dashboard/kit";
 import { Badge } from "@/components/ui/Badge";
-
-const schedule = [
-  { initials: "JP", name: "John Parker", reason: "Follow-up · Hypertension", time: "9:00 AM", mode: "Video" },
-  { initials: "MA", name: "Mariam Ahmed", reason: "New patient · Migraine", time: "10:30 AM", mode: "In-person" },
-  { initials: "LT", name: "Louis Tanoh", reason: "Lab review", time: "1:15 PM", mode: "Video" },
-];
-
-const triage = [
-  { initials: "RB", name: "Rita Boateng", note: "Chest pain · flagged high", level: "High" },
-  { initials: "SK", name: "Sam Kofi", note: "Persistent cough", level: "Medium" },
-];
+import { triageSeed } from "@/lib/data";
+import { useDemoStore } from "@/lib/data/store";
 
 const activity = [
   { icon: Pill, text: "Signed prescription for M. Ahmed", time: "20m ago" },
@@ -33,6 +24,9 @@ const activity = [
 export default function DoctorDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const appointments = useDemoStore((s) => s.appointments);
+  const schedule = appointments.filter((a) => a.status === "scheduled");
+  const triage = triageSeed.filter((t) => t.status === "pending");
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
@@ -48,7 +42,7 @@ export default function DoctorDashboard() {
     <div className="space-y-8">
       <WelcomeBanner
         name={`Dr. ${last}`}
-        subtitle="You have 3 appointments and 2 patients awaiting triage today."
+        subtitle={`You have ${schedule.length} scheduled appointment${schedule.length === 1 ? "" : "s"} and ${triage.length} patient${triage.length === 1 ? "" : "s"} awaiting triage.`}
         actions={
           <>
             <BannerButton icon={Video} label="Start consultation" onClick={() => router.push("/appointments")} />
@@ -58,32 +52,36 @@ export default function DoctorDashboard() {
       />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon={Calendar} label="Today's appointments" value="3" hint="Next: 9:00 AM" />
+        <StatCard icon={Calendar} label="Scheduled appointments" value={String(schedule.length)} hint={schedule[0] ? `Next: ${schedule[0].time}` : "None upcoming"} />
         <StatCard icon={Users} label="Patients this week" value="28" hint="+6 vs last week" trend="up" />
-        <StatCard icon={AlertTriangle} label="Awaiting triage" value="2" hint="1 high priority" />
+        <StatCard icon={AlertTriangle} label="Awaiting triage" value={String(triage.length)} hint={`${triage.filter((t) => t.riskLevel === "high").length} high priority`} />
         <StatCard icon={Pill} label="Scripts to sign" value="4" hint="2 controlled" />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Panel title="Today's schedule" action={{ label: "Full calendar", onClick: () => router.push("/appointments") }}>
+          <Panel title="Upcoming schedule" action={{ label: "Full calendar", onClick: () => router.push("/appointments") }}>
             <div className="divide-y divide-slate-100">
-              {schedule.map((s) => (
-                <PersonRow
-                  key={s.initials}
-                  initials={s.initials}
-                  title={s.name}
-                  subtitle={s.reason}
-                  right={<p className="text-sm font-medium text-ink">{s.time}</p>}
-                  badge={
-                    <Badge variant={s.mode === "Video" ? "soft" : "secondary"} className="gap-1">
-                      {s.mode === "Video" ? <Video className="h-3.5 w-3.5" /> : <Clock className="h-3.5 w-3.5" />}
-                      {s.mode}
-                    </Badge>
-                  }
-                  onClick={() => router.push("/appointments")}
-                />
-              ))}
+              {schedule.length === 0 ? (
+                <p className="py-4 text-center text-sm text-slate-500">No scheduled appointments.</p>
+              ) : (
+                schedule.map((s) => (
+                  <PersonRow
+                    key={s.id}
+                    initials={s.initials}
+                    title={s.patient ?? s.doctor}
+                    subtitle={s.reason ?? s.specialty}
+                    right={<p className="text-sm font-medium text-ink">{s.date} · {s.time}</p>}
+                    badge={
+                      <Badge variant={s.mode === "Video" ? "soft" : "secondary"} className="gap-1">
+                        {s.mode === "Video" ? <Video className="h-3.5 w-3.5" /> : <Clock className="h-3.5 w-3.5" />}
+                        {s.mode}
+                      </Badge>
+                    }
+                    onClick={() => router.push(`/appointments/${s.id}`)}
+                  />
+                ))
+              )}
             </div>
           </Panel>
 
@@ -106,11 +104,15 @@ export default function DoctorDashboard() {
             <div className="divide-y divide-slate-100">
               {triage.map((t) => (
                 <PersonRow
-                  key={t.initials}
-                  initials={t.initials}
-                  title={t.name}
-                  subtitle={t.note}
-                  badge={<Badge variant={t.level === "High" ? "destructive" : "warning"}>{t.level}</Badge>}
+                  key={t.id}
+                  initials={t.patientName.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}
+                  title={t.patientName}
+                  subtitle={t.aiDiagnosis}
+                  badge={
+                    <Badge variant={t.riskLevel === "high" ? "destructive" : t.riskLevel === "medium" ? "warning" : "secondary"} className="capitalize">
+                      {t.riskLevel}
+                    </Badge>
+                  }
                   onClick={() => router.push("/triage-queue")}
                 />
               ))}

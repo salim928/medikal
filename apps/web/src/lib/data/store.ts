@@ -31,6 +31,7 @@ interface DemoState {
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
   dismissNotification: (id: string) => void;
+  clearReadNotifications: () => void;
 
   resetDemoData: () => void;
 }
@@ -87,6 +88,11 @@ export const useDemoStore = create<DemoState>()(
       dismissNotification: (id) =>
         set((s) => ({
           notifications: s.notifications.filter((n) => n.id !== id),
+        })),
+
+      clearReadNotifications: () =>
+        set((s) => ({
+          notifications: s.notifications.filter((n) => !n.read),
         })),
 
       resetDemoData: () =>

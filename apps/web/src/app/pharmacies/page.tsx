@@ -1,75 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-
-interface Pharmacy {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  phone: string;
-  rating: number;
-  licensed: boolean;
-  openHours: string;
-  services: string[];
-  distance?: string;
-}
+import { pharmacies } from '@/lib/data';
+import { useToast } from '@/components/ui/toast';
 
 export default function PharmaciesPage() {
+  const toast = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('all');
-  
-  const pharmacies: Pharmacy[] = [
-    {
-      id: '1',
-      name: 'City Central Pharmacy',
-      address: '123 Independence Avenue',
-      city: 'Accra',
-      phone: '+233 20 123 4567',
-      rating: 4.8,
-      licensed: true,
-      openHours: '8:00 AM - 10:00 PM',
-      services: ['Prescription Fulfillment', 'Drug Verification', 'Home Delivery'],
-      distance: '2.3 km'
-    },
-    {
-      id: '2',
-      name: 'MediCare Plus Pharmacy',
-      address: '45 Ring Road East',
-      city: 'Accra',
-      phone: '+233 24 987 6543',
-      rating: 4.6,
-      licensed: true,
-      openHours: '7:00 AM - 9:00 PM',
-      services: ['Prescription Fulfillment', 'Drug Verification', 'Health Consultation'],
-      distance: '3.8 km'
-    },
-    {
-      id: '3',
-      name: 'Kumasi Health Pharmacy',
-      address: '78 Adum Street',
-      city: 'Kumasi',
-      phone: '+233 32 555 1234',
-      rating: 4.7,
-      licensed: true,
-      openHours: '8:00 AM - 8:00 PM',
-      services: ['Prescription Fulfillment', 'Drug Verification', 'Home Delivery', 'Medical Supplies'],
-      distance: '1.5 km'
-    },
-    {
-      id: '4',
-      name: 'Cape Coast Medical Supplies',
-      address: '12 London Street',
-      city: 'Cape Coast',
-      phone: '+233 33 222 8899',
-      rating: 4.5,
-      licensed: true,
-      openHours: '8:30 AM - 7:00 PM',
-      services: ['Prescription Fulfillment', 'Drug Verification'],
-      distance: '800 m'
-    }
-  ];
 
   const cities = ['all', ...Array.from(new Set(pharmacies.map(p => p.city)))];
 
@@ -126,13 +64,13 @@ export default function PharmaciesPage() {
                     {pharmacy.name}
                   </h3>
                   {pharmacy.licensed && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-500/20 text-green-400 border border-green-500/30">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                       ✓ FDA Licensed
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-yellow-400">★</span>
+                  <span className="text-amber-500">★</span>
                   <span className="text-ink font-semibold">{pharmacy.rating}</span>
                 </div>
               </div>
@@ -173,12 +111,20 @@ export default function PharmaciesPage() {
               </div>
 
               <div className="flex gap-3">
-                <button className="flex-1 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 px-4 py-2 rounded-lg font-semibold text-white transition">
+                <button
+                  onClick={() => toast.success(`Prescription order sent to ${pharmacy.name} — they will confirm shortly`)}
+                  className="flex-1 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 px-4 py-2 rounded-lg font-semibold text-white transition"
+                >
                   Order Prescription
                 </button>
-                <button className="px-4 py-2 border border-slate-200 hover:border-brand-500 text-brand-600 rounded-lg font-semibold transition">
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${pharmacy.name}, ${pharmacy.address}, ${pharmacy.city}, Ghana`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 border border-slate-200 hover:border-brand-500 text-brand-600 rounded-lg font-semibold transition"
+                >
                   Get Directions
-                </button>
+                </a>
               </div>
             </div>
           ))}

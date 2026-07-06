@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FileText, Upload, AlertCircle, CheckCircle } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
 
 export default function UploadRecordPage() {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, role } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
@@ -21,12 +24,13 @@ export default function UploadRecordPage() {
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       router.push("/login");
+      return;
     }
-    // Redirect providers away from upload page
-    if (user?.role === "provider" || user?.role === "doctor") {
+    // Uploading personal records is a patient action.
+    if (!loading && isAuthenticated && role !== "patient") {
       router.push("/records");
     }
-  }, [isAuthenticated, loading, user, router]);
+  }, [isAuthenticated, loading, role, router]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -51,21 +55,15 @@ export default function UploadRecordPage() {
     //   body: formDataToSend,
     // });
 
-    // Mock upload delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    // Simulated upload (demo mode — no backend)
+    await new Promise(resolve => setTimeout(resolve, 1200));
+
     setUploading(false);
-    alert("Record uploaded successfully!");
+    toast.success("Record uploaded");
     router.push("/records");
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner />;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -104,7 +102,7 @@ export default function UploadRecordPage() {
               type="file"
               onChange={handleFileChange}
               accept=".pdf,.jpg,.jpeg,.png,.dcm"
-              className="w-full px-4 py-3 bg-canvas border border-slate-200 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-brand-600 file:text-white file:cursor-pointer hover:file:bg-brand-700"
+              className="w-full px-4 py-3 bg-canvas border border-slate-200 rounded-lg text-ink file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-brand-600 file:text-white file:cursor-pointer hover:file:bg-brand-700"
               required
             />
           </div>

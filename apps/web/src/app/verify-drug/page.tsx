@@ -2,75 +2,23 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-
-interface DrugInfo {
-  name: string;
-  manufacturer: string;
-  batchNumber: string;
-  manufactureDate: string;
-  expiryDate: string;
-  fdaRegistration: string;
-  status: 'Authentic' | 'Counterfeit' | 'Not Found';
-  warnings?: string[];
-}
+import { lookupDrug, type DrugInfo } from '@/lib/data';
+import { useToast } from '@/components/ui/toast';
 
 export default function VerifyDrugPage() {
+  const toast = useToast();
   const [verificationMode, setVerificationMode] = useState<'qr' | 'batch'>('batch');
   const [batchNumber, setBatchNumber] = useState('');
   const [drugResult, setDrugResult] = useState<DrugInfo | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // Mock FDA database verification
   const verifyDrug = (batch: string) => {
     setIsVerifying(true);
-    
-    // Simulate API call to FDA database
+    // Simulated Ghana-FDA registry lookup (demo data from @/lib/data).
     setTimeout(() => {
-      const mockDatabase: Record<string, DrugInfo> = {
-        'FDA-AMX-2024-001': {
-          name: 'Amoxicillin 500mg Capsules',
-          manufacturer: 'Danadams Pharmaceutical Industry Ltd',
-          batchNumber: 'FDA-AMX-2024-001',
-          manufactureDate: '2024-01-15',
-          expiryDate: '2026-01-14',
-          fdaRegistration: 'FDA-GH-2024-A123',
-          status: 'Authentic',
-        },
-        'FDA-IBU-2023-045': {
-          name: 'Ibuprofen 400mg Tablets',
-          manufacturer: 'Ernest Chemists Ltd',
-          batchNumber: 'FDA-IBU-2023-045',
-          manufactureDate: '2023-06-20',
-          expiryDate: '2025-06-19',
-          fdaRegistration: 'FDA-GH-2023-B456',
-          status: 'Authentic',
-        },
-        'FAKE-123-456': {
-          name: 'Unknown Product',
-          manufacturer: 'Unregistered Manufacturer',
-          batchNumber: 'FAKE-123-456',
-          manufactureDate: 'Unknown',
-          expiryDate: 'Unknown',
-          fdaRegistration: 'Not Registered',
-          status: 'Counterfeit',
-          warnings: ['This product is not registered with Ghana FDA', 'May contain harmful substances', 'Do not consume']
-        }
-      };
-
-      const result = mockDatabase[batch] || {
-        name: 'Product Not Found',
-        manufacturer: 'Unknown',
-        batchNumber: batch,
-        manufactureDate: 'Unknown',
-        expiryDate: 'Unknown',
-        fdaRegistration: 'Not Found',
-        status: 'Not Found' as const,
-        warnings: ['This batch number is not found in FDA database', 'Please verify the code and try again']
-      };
-
-      setDrugResult(result);
+      setDrugResult(lookupDrug(batch.trim()));
       setIsVerifying(false);
-    }, 2000);
+    }, 1200);
   };
 
   const handleVerify = () => {
@@ -82,11 +30,11 @@ export default function VerifyDrugPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Authentic':
-        return 'bg-brand-500/20 text-green-400 border-green-500/50';
+        return 'bg-emerald-50 text-emerald-700 border-emerald-300';
       case 'Counterfeit':
-        return 'bg-red-500/20 text-red-600 border-red-500/50';
+        return 'bg-red-50 text-red-700 border-red-300';
       case 'Not Found':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+        return 'bg-amber-50 text-amber-700 border-amber-300';
       default:
         return 'bg-slate-500/20 text-slate-500 border-slate-500/50';
     }
@@ -160,7 +108,10 @@ export default function VerifyDrugPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">📱</div>
                 <p className="text-slate-500 mb-4">Camera access required</p>
-                <button className="px-6 py-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-semibold rounded-lg transition">
+                <button
+                  onClick={() => toast.info("Camera scanning is not available in the demo — use a batch number instead")}
+                  className="px-6 py-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-semibold rounded-lg transition"
+                >
                   Enable Camera
                 </button>
               </div>
@@ -218,16 +169,16 @@ export default function VerifyDrugPage() {
                   <p className="text-red-600 font-semibold mb-2">⚠️ Warnings:</p>
                   <ul className="list-disc list-inside space-y-1">
                     {drugResult.warnings.map((warning, index) => (
-                      <li key={index} className="text-red-300 text-sm">{warning}</li>
+                      <li key={index} className="text-red-700 text-sm">{warning}</li>
                     ))}
                   </ul>
                 </div>
               )}
 
               {drugResult.status === 'Authentic' && (
-                <div className="mt-6 p-4 bg-brand-500/10 border border-green-500/30 rounded-lg">
-                  <p className="text-green-400 font-semibold mb-2">✓ Verified Authentic</p>
-                  <p className="text-green-300 text-sm">
+                <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                  <p className="text-emerald-700 font-semibold mb-2">✓ Verified Authentic</p>
+                  <p className="text-emerald-700 text-sm">
                     This medication is registered with Ghana FDA and manufactured by a licensed facility.
                   </p>
                 </div>

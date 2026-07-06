@@ -3,6 +3,8 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDemoStore } from "@/lib/data/store";
+import { PageSpinner } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
 import { 
   Bell, 
@@ -18,94 +20,14 @@ import {
   Info
 } from "lucide-react";
 
-interface Notification {
-  id: string;
-  type: 'appointment' | 'prescription' | 'record' | 'system' | 'video';
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-  actionUrl?: string;
-  priority: 'low' | 'medium' | 'high';
-}
-
-// Mock notifications data
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    type: 'appointment',
-    title: 'Upcoming Appointment',
-    message: 'Your video consultation with Dr. Sarah Smith is scheduled for tomorrow at 2:00 PM',
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    actionUrl: '/appointments/1',
-    priority: 'high'
-  },
-  {
-    id: '2',
-    type: 'prescription',
-    title: 'Prescription Ready',
-    message: 'Your prescription for Amoxicillin is ready for pickup at CVS Pharmacy',
-    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-    read: false,
-    actionUrl: '/prescriptions/1',
-    priority: 'medium'
-  },
-  {
-    id: '3',
-    type: 'record',
-    title: 'Lab Results Available',
-    message: 'Your blood test results from October 15 are now available to view',
-    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    actionUrl: '/records/3',
-    priority: 'medium'
-  },
-  {
-    id: '4',
-    type: 'system',
-    title: 'Profile Updated',
-    message: 'Your profile information has been successfully updated',
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    priority: 'low'
-  },
-  {
-    id: '5',
-    type: 'video',
-    title: 'Consultation Recording Available',
-    message: 'The recording of your consultation with Dr. Michael Johnson is now available',
-    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    actionUrl: '/consultation/5',
-    priority: 'low'
-  },
-  {
-    id: '6',
-    type: 'appointment',
-    title: 'Appointment Confirmed',
-    message: 'Your appointment on October 20 at 10:00 AM has been confirmed',
-    timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    actionUrl: '/appointments/6',
-    priority: 'low'
-  },
-  {
-    id: '7',
-    type: 'prescription',
-    title: 'Prescription Expiring Soon',
-    message: 'Your prescription for Lisinopril will expire in 7 days. Request a refill.',
-    timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    read: true,
-    actionUrl: '/prescriptions/2',
-    priority: 'medium'
-  },
-];
-
 export default function NotificationsPage() {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+  const notifications = useDemoStore((s) => s.notifications);
+  const markNotificationRead = useDemoStore((s) => s.markNotificationRead);
+  const markAllNotificationsRead = useDemoStore((s) => s.markAllNotificationsRead);
+  const dismissNotification = useDemoStore((s) => s.dismissNotification);
+  const clearReadNotifications = useDemoStore((s) => s.clearReadNotifications);
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
 
@@ -115,16 +37,7 @@ export default function NotificationsPage() {
     }
   }, [isAuthenticated, loading, router]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading notifications...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner label="Loading notifications…" />;
 
   const filteredNotifications = notifications
     .filter(n => {
@@ -139,30 +52,17 @@ export default function NotificationsPage() {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  const markAsRead = (id: string) => {
-    setNotifications(prev =>
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
-  };
-
-  const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
-
-  const deleteNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-  };
-
-  const clearAllRead = () => {
-    setNotifications(prev => prev.filter(n => !n.read));
-  };
+  const markAsRead = markNotificationRead;
+  const markAllAsRead = markAllNotificationsRead;
+  const deleteNotification = dismissNotification;
+  const clearAllRead = clearReadNotifications;
 
   const getIcon = (type: string) => {
     switch (type) {
       case 'appointment':
         return <Calendar className="w-5 h-5 text-brand-600" />;
       case 'prescription':
-        return <Pill className="w-5 h-5 text-green-400" />;
+        return <Pill className="w-5 h-5 text-emerald-600" />;
       case 'record':
         return <FileText className="w-5 h-5 text-brand-600" />;
       case 'video':
@@ -177,9 +77,9 @@ export default function NotificationsPage() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
-        return 'border-red-500/50 bg-red-500/5';
+        return 'border-red-300 bg-red-50';
       case 'medium':
-        return 'border-yellow-500/50 bg-yellow-500/5';
+        return 'border-amber-300 bg-amber-50';
       default:
         return 'border-slate-200 bg-mist';
     }
@@ -253,9 +153,9 @@ export default function NotificationsPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-green-500/30 rounded-lg p-4">
+        <div className="bg-white border border-emerald-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <CheckCheck className="w-8 h-8 text-green-400" />
+            <CheckCheck className="w-8 h-8 text-emerald-600" />
             <div>
               <p className="text-2xl font-bold text-ink">{notifications.filter(n => n.read).length}</p>
               <p className="text-sm text-slate-500">Read</p>
@@ -263,9 +163,9 @@ export default function NotificationsPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-yellow-500/30 rounded-lg p-4">
+        <div className="bg-white border border-amber-200 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-8 h-8 text-yellow-400" />
+            <AlertCircle className="w-8 h-8 text-amber-600" />
             <div>
               <p className="text-2xl font-bold text-ink">{notifications.filter(n => n.priority === 'high').length}</p>
               <p className="text-sm text-slate-500">High Priority</p>
