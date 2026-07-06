@@ -28,7 +28,7 @@ export function Avatar({ src, alt, initials, size = "md" }: AvatarProps) {
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-blue-100 text-blue-700 font-semibold flex items-center justify-center`}
+      className={`${sizeClasses[size]} rounded-full bg-brand-100 text-brand-700 font-semibold flex items-center justify-center`}
     >
       {initials || alt.substring(0, 2).toUpperCase()}
     </div>

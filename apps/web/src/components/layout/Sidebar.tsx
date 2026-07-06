@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { signOut as authSignOut } from "@/lib/auth-fresh";
 import { clearDemoSession } from "@/lib/demo";
+import { clearAuthCache } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/BrandMark";
 import {
@@ -59,7 +60,7 @@ function NavLink({
         active ? "bg-white/10 text-white" : "text-slate-300 hover:bg-white/5 hover:text-white"
       )}
     >
-      <Icon className={cn("h-[18px] w-[18px] flex-shrink-0", active ? "text-blue-300" : "text-slate-400 group-hover:text-slate-200")} />
+      <Icon className={cn("h-[18px] w-[18px] flex-shrink-0", active ? "text-brand-300" : "text-slate-400 group-hover:text-slate-200")} />
       {!collapsed && item.label}
     </Link>
   );
@@ -88,6 +89,7 @@ export function Sidebar({
 
   const handleSignOut = async () => {
     clearDemoSession();
+    clearAuthCache();
     try { await authSignOut(); } catch {}
     router.push("/login");
   };

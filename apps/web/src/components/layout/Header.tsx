@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { signOut as authSignOut } from "@/lib/auth-fresh";
 import { clearDemoSession } from "@/lib/demo";
+import { clearAuthCache } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/Button";
 import { Menu, X, Activity, Bell, Settings, User, Shield, LogOut, ChevronDown } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
@@ -21,6 +22,7 @@ export function Header() {
   // Sign out function
   const handleSignOut = async () => {
     clearDemoSession();
+    clearAuthCache();
     try {
       await authSignOut();
     } catch {

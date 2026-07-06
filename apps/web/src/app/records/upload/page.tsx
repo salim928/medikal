@@ -79,7 +79,7 @@ export default function UploadRecordPage() {
       </div>
 
       {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+      <div className="bg-brand-50 border border-brand-100 rounded-lg p-4">
         <div className="flex gap-3">
           <AlertCircle className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-slate-600">
@@ -180,7 +180,7 @@ export default function UploadRecordPage() {
         </div>
 
         {/* Privacy Notice */}
-        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+        <div className="bg-brand-50 border border-brand-100 rounded-lg p-4">
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-slate-600">

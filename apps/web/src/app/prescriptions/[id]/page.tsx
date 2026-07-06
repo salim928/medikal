@@ -134,7 +134,7 @@ export default function PrescriptionDetailsPage() {
         </h2>
         <p className="mb-4 text-slate-600">{prescription.instructions}</p>
         {prescription.prescribedFor && (
-          <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-3">
+          <div className="mt-4 rounded-lg border border-brand-100 bg-brand-50 p-3">
             <p className="text-sm text-slate-500">Prescribed for:</p>
             <p className="text-ink">{prescription.prescribedFor}</p>
           </div>

@@ -60,7 +60,7 @@ function Hero() {
     { icon: HeartPulse, title: "Follow-Up Care", body: "Ongoing support when you need it" },
   ];
   return (
-    <section className="bg-gradient-to-br from-white via-blue-50/50 to-blue-100/70">
+    <section className="bg-gradient-to-br from-white via-brand-50/60 to-brand-100/70">
       <div className="container grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
         <div>
           <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
@@ -179,7 +179,7 @@ const steps = [
 
 function HowItWorks() {
   return (
-    <section id="how" className="bg-blue-50/60 py-20">
+    <section id="how" className="bg-brand-50/70 py-20">
       <div className="container">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">Get care in 4 simple steps</p>
@@ -267,7 +267,7 @@ function AppSection() {
   return (
     <section className="bg-white py-20">
       <div className="container">
-      <div className="grid items-center gap-12 rounded-3xl bg-blue-50/70 p-8 sm:p-12 lg:grid-cols-2">
+      <div className="grid items-center gap-12 rounded-3xl bg-brand-50/70 p-8 sm:p-12 lg:grid-cols-2">
         <div className="relative flex justify-center">
           <div className="w-[220px] rounded-[2rem] border-8 border-slate-900 bg-slate-900 shadow-xl">
             <div className="overflow-hidden rounded-[1.4rem]">
@@ -355,7 +355,7 @@ function Testimonials() {
 function Insurance() {
   const plans = [
     { name: "NHIS", color: "text-emerald-600" },
-    { name: "GLICO Healthcare", color: "text-blue-700" },
+    { name: "GLICO Healthcare", color: "text-brand-700" },
     { name: "Acacia Health", color: "text-purple-600" },
     { name: "Nationwide Medical", color: "text-sky-600" },
     { name: "Premier Health", color: "text-teal-600" },

@@ -85,7 +85,7 @@ export function DoctorRegistrationForm() {
         <h2 className="text-2xl font-bold">Doctor Registration</h2>
         <p className="text-slate-500">Create your professional account</p>
         <div className="mt-2 p-3 bg-blue-900/30 border border-blue-700 rounded-lg">
-          <p className="text-sm text-blue-300">
+          <p className="text-sm text-brand-300">
             ⚠️ Your account will be pending verification. You'll need to provide proof of medical license before accessing full features.
           </p>
         </div>

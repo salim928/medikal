@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* shadcn/ui design tokens (New York) — primary tuned to the brand indigo. */
+/* shadcn/ui design tokens (New York) — primary tuned to the brand brown. */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -11,7 +11,7 @@
     --card-foreground: 240 6% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 6% 10%;
-    --primary: 221 83% 53%;
+    --primary: 29 50% 36%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 5% 96%;
     --secondary-foreground: 240 6% 10%;
@@ -23,7 +23,7 @@
     --destructive-foreground: 0 0% 100%;
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 221 83% 53%;
+    --ring: 29 50% 36%;
     --radius: 0.75rem;
   }
 }

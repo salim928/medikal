@@ -14,7 +14,7 @@ module.exports = {
     'lg:hidden', 'lg:flex-col', 'lg:gap-2', '-translate-x-full', 'translate-x-0',
     'flex-1', 'min-w-0',
     // Status badge tokens (see src/lib/ui/status.ts) — used via dynamic lookup.
-    'bg-blue-50', 'text-blue-700', 'border-blue-200',
+    'bg-brand-50', 'text-brand-700', 'border-brand-200',
     'bg-emerald-50', 'text-emerald-700', 'border-emerald-200',
     'bg-slate-100', 'text-slate-600', 'border-slate-200',
     'bg-red-50', 'text-red-700', 'border-red-200',
@@ -22,9 +22,9 @@ module.exports = {
     // Navy sidebar/app-shell tokens
     'bg-navy', 'bg-navy-800', 'bg-navy-950', 'from-navy-950', 'via-navy', 'to-navy-800',
     'bg-gradient-to-br', 'border-white/10', 'border-white/25', 'bg-white/10', 'bg-white/5',
-    'text-blue-400', 'text-slate-400',
+    'text-brand-400', 'text-slate-400',
     'hover:bg-white/10', 'hover:bg-white/5', 'hover:text-white', 'hover:text-red-300',
-    'text-slate-200', 'text-slate-300', 'text-blue-300', 'group-hover:text-slate-200',
+    'text-slate-200', 'text-slate-300', 'text-brand-300', 'group-hover:text-slate-200',
     'border-l-4', 'border-l-red-500', 'border-l-amber-500', 'border-l-brand-500', 'opacity-70',
   ],
   theme: {
@@ -39,11 +39,12 @@ module.exports = {
         display: ['var(--font-display)', 'var(--font-sans)', 'sans-serif'],
       },
       colors: {
+        // Deep espresso — the dark anchor of the brown/white theme.
         navy: {
-          DEFAULT: '#0B1B3A',
-          800: '#10244C',
-          900: '#0B1B3A',
-          950: '#061027',
+          DEFAULT: '#2B1D10',
+          800: '#3A2817',
+          900: '#2B1D10',
+          950: '#1D130A',
         },
         // shadcn/ui semantic tokens (driven by CSS variables in globals.css).
         border: "hsl(var(--border))",
@@ -81,18 +82,18 @@ module.exports = {
         },
         // Brand: a clean, trustworthy medical blue (matches the medicom design).
         brand: {
-          DEFAULT: '#2563eb',
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          DEFAULT: '#8A5A2E',
+          50: '#FAF6F0',
+          100: '#F2E8DA',
+          200: '#E4D0B4',
+          300: '#D2B189',
+          400: '#BC8F5F',
+          500: '#A2733F',
+          600: '#8A5A2E',
+          700: '#714824',
+          800: '#5B3A1E',
+          900: '#4A3019',
+          950: '#2E1D0E',
         },
         slate: { 950: '#020617' },
         cyan: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2' },

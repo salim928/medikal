@@ -81,7 +81,7 @@ export default function AvailabilityPage() {
       </div>
 
       {/* Instructions */}
-      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+      <div className="bg-brand-50 border border-brand-100 rounded-lg p-4">
         <p className="text-slate-600">
           <strong className="text-ink">💡 Tip:</strong> Set your weekly availability below. Patients will only be able to book appointments during these times.
         </p>

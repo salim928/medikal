@@ -111,7 +111,7 @@ export default function AppointmentsPage() {
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {[
           { icon: Clock, value: stats.today, label: "Today", color: "text-brand-600" },
-          { icon: Calendar, value: stats.scheduled, label: "Scheduled", color: "text-blue-600" },
+          { icon: Calendar, value: stats.scheduled, label: "Scheduled", color: "text-brand-600" },
           { icon: CheckCircle, value: stats.completed, label: "Completed", color: "text-emerald-600" },
           { icon: XCircle, value: stats.cancelled, label: "Cancelled", color: "text-red-600" },
         ].map((s) => (

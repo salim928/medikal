@@ -99,7 +99,7 @@ export function MidwifeRegistrationForm() {
 
       {/* Verification Notice */}
       <div className="mb-6 p-4 bg-blue-900/30 border border-blue-500/50 rounded-lg">
-        <p className="text-blue-300 text-sm">
+        <p className="text-brand-300 text-sm">
           <strong>Note:</strong> Your account will be pending verification. Our team will review your
           license and certifications before granting full access.
         </p>

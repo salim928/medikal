@@ -22,7 +22,7 @@ export function Notification({
     success: "bg-green-50 border-green-200",
     error: "bg-red-50 border-red-200",
     warning: "bg-yellow-50 border-yellow-200",
-    info: "bg-blue-50 border-blue-200",
+    info: "bg-brand-50 border-brand-200",
   }[type];
 
   const textColor = {

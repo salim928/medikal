@@ -189,7 +189,7 @@ export default function TriageQueuePage() {
                     <Button
                       onClick={() => setStatus(submission.id, "modified", `Marked as modified — follow up with ${submission.patientName}`)}
                       variant="outline"
-                      className="flex items-center gap-2 border-blue-200 bg-blue-50 text-brand-700 hover:bg-blue-100"
+                      className="flex items-center gap-2 border-brand-200 bg-brand-50 text-brand-700 hover:bg-brand-100"
                     >
                       <FileText className="h-4 w-4" />
                       Modify &amp; approve
