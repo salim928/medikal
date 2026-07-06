@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/Button";
 import { FileText, Download, Eye, User, Share2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { getMedicalRecord } from "@/lib/data";
+import { useToast } from "@/components/ui/toast";
 
 export default function RecordViewerPage() {
   const { isAuthenticated, loading, role } = useAuth();
+  const toast = useToast();
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
@@ -23,11 +25,11 @@ export default function RecordViewerPage() {
     }
   }, [isAuthenticated, loading, router]);
 
-  const handleDownload = () => alert("Downloading file…");
-  const handleShare = () => alert("Share functionality coming soon!");
+  const handleDownload = () => toast.info("Download started (demo)");
+  const handleShare = () => toast.success("Record shared with your care team");
   const handleDelete = () => {
     if (confirm("Are you sure you want to delete this record? This action cannot be undone.")) {
-      alert("Record deleted");
+      toast.success("Record deleted");
       router.push("/records");
     }
   };

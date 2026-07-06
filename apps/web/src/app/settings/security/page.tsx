@@ -1,6 +1,9 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
+import { securitySessions, type SecuritySession } from "@/lib/data";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -15,42 +18,6 @@ import {
   Eye,
   EyeOff
 } from "lucide-react";
-
-interface ActiveSession {
-  id: string;
-  device: string;
-  location: string;
-  ipAddress: string;
-  lastActive: string;
-  current: boolean;
-}
-
-const mockSessions: ActiveSession[] = [
-  {
-    id: '1',
-    device: 'Windows PC - Chrome',
-    location: 'New York, NY',
-    ipAddress: '192.168.1.1',
-    lastActive: new Date().toISOString(),
-    current: true
-  },
-  {
-    id: '2',
-    device: 'iPhone 13 - Safari',
-    location: 'New York, NY',
-    ipAddress: '192.168.1.2',
-    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    current: false
-  },
-  {
-    id: '3',
-    device: 'iPad Pro - Safari',
-    location: 'Brooklyn, NY',
-    ipAddress: '192.168.1.3',
-    lastActive: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    current: false
-  }
-];
 
 export default function SecuritySettingsPage() {
   const { isAuthenticated, loading } = useAuth();
@@ -69,7 +36,7 @@ export default function SecuritySettingsPage() {
   const [showTwoFactorSetup, setShowTwoFactorSetup] = useState(false);
   
   // Sessions state
-  const [sessions, setSessions] = useState<ActiveSession[]>(mockSessions);
+  const [sessions, setSessions] = useState<SecuritySession[]>(securitySessions);
   
   // Alert state
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -80,16 +47,7 @@ export default function SecuritySettingsPage() {
     }
   }, [isAuthenticated, loading, router]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading security settings...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner />;
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();

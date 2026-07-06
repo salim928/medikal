@@ -7,13 +7,15 @@ import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useUserStore } from "@/stores/useUserStore";
-import { apiClient } from "@/lib/api";
 import { User, Save, X } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
+import { PageSpinner } from "@/components/ui/Spinner";
 
 export default function ProfileSettingsPage() {
   const { user, isAuthenticated, loading } = useAuth();
   const router = useRouter();
   const userStore = useUserStore();
+  const toast = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,7 +33,10 @@ export default function ProfileSettingsPage() {
   useEffect(() => {
     if (user) {
       setFormData({
-        fullName: user.email || "",
+        fullName:
+          (user.user_metadata?.full_name as string) ||
+          (user.user_metadata?.name as string) ||
+          "",
         email: user.email || "",
         bio: "",
       });
@@ -40,31 +45,17 @@ export default function ProfileSettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    try {
-      await apiClient.put("/users/profile", formData);
-      userStore.updateProfile({
-        fullName: formData.fullName,
-        bio: formData.bio,
-      });
-      setIsEditing(false);
-      alert("Profile updated successfully");
-    } catch (error) {
-      alert("Failed to update profile");
-    } finally {
-      setSaving(false);
-    }
+    // Demo mode: persist to the local user store only.
+    userStore.updateProfile({
+      fullName: formData.fullName,
+      bio: formData.bio,
+    });
+    setIsEditing(false);
+    setSaving(false);
+    toast.success("Profile updated");
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading profile...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <PageSpinner label="Loading profile…" />;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { supabase } from "@/lib/auth-fresh";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -22,6 +23,12 @@ export default function ForgotPasswordPage() {
     setSuccess(false);
 
     try {
+      if (!isSupabaseConfigured) {
+        // Demo mode — no auth backend; simulate the reset email being sent.
+        await new Promise((r) => setTimeout(r, 700));
+        setSuccess(true);
+        return;
+      }
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${process.env.NEXT_PUBLIC_DOMAIN}/reset-password`,
       });

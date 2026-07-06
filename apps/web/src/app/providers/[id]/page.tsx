@@ -8,11 +8,13 @@ import {
 import PaymentModal from '@/components/payment/PaymentModal';
 import { useAuth } from '@/hooks/useAuth';
 import { getProvider, consultTimes, providerReviews } from '@/lib/data';
+import { useToast } from "@/components/ui/toast";
 
 export default function ProviderProfilePage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
+  const toast = useToast();
   const provider = getProvider(params.id as string);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -35,14 +37,14 @@ export default function ProviderProfilePage() {
 
   const handleBooking = () => {
     if (!selectedDate || !selectedTime) {
-      alert('Please select a date and time');
+      toast.error('Please select a date and time');
       return;
     }
     setShowPaymentModal(true);
   };
 
   const handlePaymentSuccess = () => {
-    alert('Appointment booked successfully! You will receive a confirmation email.');
+    toast.success('Appointment booked — a confirmation has been sent');
     setShowPaymentModal(false);
     router.push('/appointments');
   };

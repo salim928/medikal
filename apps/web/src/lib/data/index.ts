@@ -580,13 +580,14 @@ export interface SecuritySession {
   id: string;
   device: string;
   location: string;
-  ip: string;
+  ipAddress: string;
+  /** ISO timestamp of last activity. */
   lastActive: string;
   current: boolean;
 }
 
 export const securitySessions: SecuritySession[] = [
-  { id: "s1", device: "Windows PC — Chrome", location: "Accra, Ghana", ip: "154.160.1.24", lastActive: "Now", current: true },
-  { id: "s2", device: "iPhone 15 — Safari", location: "Accra, Ghana", ip: "154.160.3.87", lastActive: "2 hours ago", current: false },
-  { id: "s3", device: "Android — Chrome", location: "Kumasi, Ghana", ip: "41.215.168.9", lastActive: "3 days ago", current: false },
+  { id: "s1", device: "Windows PC — Chrome", location: "Accra, Ghana", ipAddress: "154.160.1.24", lastActive: new Date().toISOString(), current: true },
+  { id: "s2", device: "iPhone 15 — Safari", location: "Accra, Ghana", ipAddress: "154.160.3.87", lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), current: false },
+  { id: "s3", device: "Android — Chrome", location: "Kumasi, Ghana", ipAddress: "41.215.168.9", lastActive: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), current: false },
 ];

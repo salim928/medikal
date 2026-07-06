@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/Button";
+import { useToast } from "@/components/ui/toast";
 import { 
   Video, 
   VideoOff, 
@@ -34,6 +35,7 @@ interface Participant {
 
 export default function VideoConsultationPage() {
   const { isAuthenticated, loading, user } = useAuth();
+  const toast = useToast();
   const router = useRouter();
   const params = useParams();
   const appointmentId = params.id as string;
@@ -183,7 +185,7 @@ export default function VideoConsultationPage() {
 
   const saveConsultationNotes = () => {
     // In real implementation, save notes to backend
-    alert("Consultation notes saved!");
+    toast.success("Consultation notes saved");
   };
 
   if (loading) {

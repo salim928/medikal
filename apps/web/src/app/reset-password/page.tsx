@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { supabase } from "@/lib/auth-fresh";
+import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { PageSpinner } from "@/components/ui/Spinner";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -21,8 +23,13 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     // Check if we have a valid session from the reset link
     const checkSession = async () => {
+      if (!isSupabaseConfigured) {
+        // Demo mode — no auth backend, so treat the link as valid.
+        setIsValidSession(true);
+        return;
+      }
       const { data: { session }, error } = await supabase.auth.getSession();
-      
+
       if (error || !session) {
         setIsValidSession(false);
         setError("Invalid or expired reset link. Please request a new one.");
@@ -53,11 +60,15 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: password,
-      });
-
-      if (error) throw error;
+      if (!isSupabaseConfigured) {
+        // Demo mode — simulate the password update.
+        await new Promise((r) => setTimeout(r, 700));
+      } else {
+        const { error } = await supabase.auth.updateUser({
+          password: password,
+        });
+        if (error) throw error;
+      }
 
       setSuccess(true);
       
@@ -78,11 +89,8 @@ export default function ResetPasswordPage() {
 
   if (isValidSession === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-canvas">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-slate-600">Verifying reset link...</p>
-        </div>
+      <div className="flex min-h-screen items-center justify-center bg-canvas">
+        <PageSpinner label="Verifying reset link…" />
       </div>
     );
   }

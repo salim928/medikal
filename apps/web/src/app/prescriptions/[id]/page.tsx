@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Pill, Download, RefreshCw, User, Calendar, FileText } from "lucide-react";
 import Link from "next/link";
 import { getPrescription, type PrescriptionStatus } from "@/lib/data";
+import { useToast } from "@/components/ui/toast";
 
 const statusBadge: Record<PrescriptionStatus, string> = {
   active: "bg-green-50 text-green-600",
@@ -16,6 +17,7 @@ const statusBadge: Record<PrescriptionStatus, string> = {
 
 export default function PrescriptionDetailsPage() {
   const { isAuthenticated, loading, role } = useAuth();
+  const toast = useToast();
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
@@ -29,8 +31,8 @@ export default function PrescriptionDetailsPage() {
     }
   }, [isAuthenticated, loading, router]);
 
-  const handleDownload = () => alert("Downloading prescription as PDF…");
-  const handleRequestRefill = () => alert("Refill request sent to doctor!");
+  const handleDownload = () => toast.info("Prescription PDF download started (demo)");
+  const handleRequestRefill = () => toast.success("Refill request sent to your doctor");
 
   if (loading) {
     return (
