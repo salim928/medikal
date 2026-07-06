@@ -1,0 +1,10 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1280, height: 1100 } });
+await p.goto("http://localhost:3011/signup", { waitUntil: "networkidle", timeout: 90000 });
+await p.getByRole("button", { name: /Patient/ }).first().click();
+await p.getByRole("button", { name: /Continue/ }).click();
+await p.waitForTimeout(2500);
+await p.screenshot({ path: "D:/DSProjects/aids/medicom/v2-register.png", fullPage: true });
+await b.close();
+console.log("ok");

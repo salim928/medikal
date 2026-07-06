@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+
+# builds
+.next/
+out/
+dist/
+.turbo/
+
+# env — never commit secrets
+.env
+.env.local
+.env.production
+.env*.local
+
+# test artifacts
+playwright-report/
+test-results/
+coverage/
+
+# misc
+.DS_Store
+*.log
+*.bak

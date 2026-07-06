@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Login Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .log {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        .warning { color: #f59e0b; }
+        .session-info {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .session-info h3 {
+            margin: 0 0 10px 0;
+            color: #065f46;
+        }
+        .session-detail {
+            font-size: 0.9em;
+            color: #065f46;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Direct Login Test</h1>
+        <p class="subtitle">This bypasses all Next.js routing to test pure login functionality</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" value="salimadams49@gmail.com" required />
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" value="Lemon@2025" required />
+            </div>
+            
+            <button type="submit" id="loginBtn">Sign In & Test Session</button>
+        </form>
+        
+        <div class="log" id="log"></div>
+        
+        <div id="sessionInfo"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cooyzjomljshbudjnnkf.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvb3l6am9tbGpzaGJ1ZGpubmtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2ODgyMjAsImV4cCI6MjA3NjI2NDIyMH0.dmeXTX2p_UWXOoPyl9pKIQZ8GLjBA6KWXPaeZFww7cs';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true,
+                storage: window.localStorage,
+            }
+        });
+
+        const logDiv = document.getElementById('log');
+        const form = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const sessionInfoDiv = document.getElementById('sessionInfo');
+
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<strong>[${time}]</strong> ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function showSessionInfo(session) {
+            sessionInfoDiv.innerHTML = `
+                <div class="session-info">
+                    <h3>✅ Session Successfully Created!</h3>
+                    <div class="session-detail"><strong>Email:</strong> ${session.user.email}</div>
+                    <div class="session-detail"><strong>User ID:</strong> ${session.user.id}</div>
+                    <div class="session-detail"><strong>Created:</strong> ${new Date(session.user.created_at).toLocaleString()}</div>
+                    <div class="session-detail"><strong>Expires:</strong> ${new Date(session.expires_at * 1000).toLocaleString()}</div>
+                    <div class="session-detail"><strong>Access Token:</strong> ${session.access_token.substring(0, 20)}...</div>
+                    <div class="session-detail" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #10b981;">
+                        <strong>✅ LOGIN IS WORKING!</strong><br>
+                        The issue is with the redirect/dashboard, not the login itself.
+                    </div>
+                </div>
+            `;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            logDiv.innerHTML = '';
+            sessionInfoDiv.innerHTML = '';
+            
+            try {
+                addLog('🔐 Starting login...', 'info');
+                
+                // Step 1: Sign in
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) throw error;
+                
+                addLog('✅ signInWithPassword() succeeded', 'success');
+                addLog(`User: ${data.user.email}`, 'info');
+                
+                // Step 2: Wait and check session
+                addLog('⏳ Waiting 1 second for session to be saved...', 'info');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Step 3: Verify session multiple times
+                for (let i = 1; i <= 5; i++) {
+                    addLog(`🔍 Session check attempt ${i}/5...`, 'info');
+                    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                    
+                    if (sessionError) {
+                        addLog(`❌ Error checking session: ${sessionError.message}`, 'error');
+                        continue;
+                    }
+                    
+                    if (session) {
+                        addLog(`✅ Session found! User: ${session.user.email}`, 'success');
+                        showSessionInfo(session);
+                        
+                        // Check localStorage
+                        const stored = localStorage.getItem('sb-cooyzjomljshbudjnnkf-auth-token');
+                        if (stored) {
+                            addLog('✅ Session saved to localStorage', 'success');
+                        } else {
+                            addLog('⚠️ Session NOT in localStorage', 'warning');
+                        }
+                        
+                        loginBtn.textContent = 'Login Successful!';
+                        loginBtn.style.background = '#10b981';
+                        return;
+                    }
+                    
+                    addLog(`❌ Session not found on attempt ${i}`, 'warning');
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                // If we get here, session was never found
+                addLog('❌ Session could not be established after 5 attempts', 'error');
+                addLog('⚠️ This means email confirmation might be required', 'warning');
+                addLog('💡 Check Supabase Dashboard → Auth → Providers → Email settings', 'info');
+                
+            } catch (error) {
+                addLog(`❌ Login failed: ${error.message}`, 'error');
+                
+                if (error.message.includes('Invalid login credentials')) {
+                    addLog('💡 Possible reasons:', 'info');
+                    addLog('   • Wrong email or password', 'info');
+                    addLog('   • Email not confirmed', 'info');
+                    addLog('   • User does not exist', 'info');
+                }
+            } finally {
+                if (loginBtn.textContent === 'Signing in...') {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Try Again';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

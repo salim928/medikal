@@ -1,0 +1,49 @@
+{
+  "name": "mediconnect",
+  "version": "1.0.0",
+  "description": "Enterprise-grade telehealth platform with $0 AI operating cost",
+  "private": true,
+  "packageManager": "npm@10.0.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "test": "turbo run test",
+    "test:cov": "turbo run test:cov",
+    "test:e2e": "turbo run test:e2e",
+    "type-check": "turbo run type-check",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "workspaces": [
+    "apps/web",
+    "apps/mobile",
+    "packages/api",
+    "packages/core",
+    "packages/ui",
+    "packages/db",
+    "packages/ai",
+    "packages/blockchain"
+  ],
+  "devDependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "playwright": "^1.40.0",
+    "prettier": "^3.2.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.1"
+  },
+  "dependencies": {
+    "@next/swc-win32-x64-msvc": "^16.2.10",
+    "lucide-react": "^0.546.0",
+    "recharts": "^3.2.1"
+  }
+}

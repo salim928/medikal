@@ -1,0 +1,11 @@
+import { chromium } from "playwright";
+const [role, path, out] = [process.argv[2], process.argv[3], process.argv[4]];
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 1000 } });
+await ctx.addCookies([{ name: "mc-demo", value: role, url: "http://localhost:3011" }]);
+const p = await ctx.newPage();
+const r = await p.goto(`http://localhost:3011${path}`, { waitUntil: "networkidle", timeout: 90000 });
+await p.waitForTimeout(1500);
+console.log("status", r?.status());
+await p.screenshot({ path: out, fullPage: true });
+await b.close();

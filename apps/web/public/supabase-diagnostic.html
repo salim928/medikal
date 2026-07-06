@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Client Diagnostic</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #1e293b;
+        }
+        .success { border-color: #10b981; background: #064e3b; color: #d1fae5; }
+        .error { border-color: #ef4444; background: #7f1d1d; color: #fecaca; }
+        .warning { border-color: #f59e0b; background: #78350f; color: #fef3c7; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            background: #0ea5e9;
+            color: white;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        button:hover { background: #0284c7; }
+        pre {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 11px;
+        }
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #475569;
+            border-radius: 4px;
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: monospace;
+        }
+        h1 { color: #22d3ee; }
+        h2 { color: #38bdf8; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🔬 Supabase Client Diagnostic</h1>
+    
+    <div id="client-status"></div>
+    
+    <h2>Test Login</h2>
+    <div class="status">
+        <input type="email" id="email" placeholder="Email" value="salimadams49@gmail.com">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="testLogin()">Login</button>
+        <button onclick="clearAll()">Clear All Storage</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://cooyzjomljshbudjnnkf.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvb3l6am9tbGpzaGJ1ZGpubmtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2ODgyMjAsImV4cCI6MjA3NjI2NDIyMH0.dmeXTX2p_UWXOoPyl9pKIQZ8GLjBA6KWXPaeZFww7cs';
+
+        // Check localStorage availability
+        function checkLocalStorage() {
+            try {
+                const test = '__storage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // Initialize client
+        console.log('=== Supabase Client Initialization ===');
+        console.log('URL:', SUPABASE_URL);
+        console.log('Key:', SUPABASE_ANON_KEY.substring(0, 20) + '...');
+        console.log('localStorage available:', checkLocalStorage());
+        console.log('window.localStorage:', typeof window.localStorage);
+
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true,
+                    storage: window.localStorage,
+                    flowType: 'pkce',
+                    debug: true
+                }
+            });
+            console.log('✅ Supabase client created successfully');
+            console.log('Client:', supabase);
+        } catch (error) {
+            console.error('❌ Failed to create Supabase client:', error);
+        }
+
+        // Display client status
+        async function displayClientStatus() {
+            const statusDiv = document.getElementById('client-status');
+            
+            const localStorageAvailable = checkLocalStorage();
+            const localStorageKeys = Object.keys(localStorage).filter(k => 
+                k.includes('supabase') || k.includes('sb-')
+            );
+            
+            let sessionInfo = 'Not checked yet';
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) {
+                    sessionInfo = `Error: ${JSON.stringify(error)}`;
+                } else if (session) {
+                    sessionInfo = `Active session for ${session.user.email}`;
+                } else {
+                    sessionInfo = 'No active session';
+                }
+            } catch (err) {
+                sessionInfo = `Exception: ${err.message}`;
+            }
+
+            statusDiv.innerHTML = `
+                <div class="status ${localStorageAvailable ? 'success' : 'error'}">
+                    <h2>Client Status</h2>
+                    <p><strong>localStorage Available:</strong> ${localStorageAvailable ? '✅ Yes' : '❌ No'}</p>
+                    <p><strong>Supabase Client:</strong> ${supabase ? '✅ Created' : '❌ Not Created'}</p>
+                    <p><strong>Session Status:</strong> ${sessionInfo}</p>
+                    <p><strong>Storage Keys:</strong> ${localStorageKeys.length > 0 ? localStorageKeys.join(', ') : 'None'}</p>
+                    <p><strong>Current URL:</strong> ${window.location.href}</p>
+                    <p><strong>Origin:</strong> ${window.location.origin}</p>
+                </div>
+            `;
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultsDiv = document.getElementById('results');
+
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="status">Logging in...</div>';
+
+            try {
+                console.log('=== Starting Login Test ===');
+                console.log('Email:', email);
+                console.log('Password length:', password.length);
+
+                // Check localStorage before login
+                console.log('localStorage before login:', Object.keys(localStorage));
+
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                console.log('Login response:', { data, error });
+
+                if (error) {
+                    console.error('Login error:', error);
+                    resultsDiv.innerHTML = `
+                        <div class="status error">
+                            <h3>❌ Login Failed</h3>
+                            <pre>${JSON.stringify(error, null, 2)}</pre>
+                        </div>
+                    `;
+                    return;
+                }
+
+                if (!data.session) {
+                    console.error('No session in response');
+                    resultsDiv.innerHTML = `
+                        <div class="status error">
+                            <h3>❌ No Session Created</h3>
+                            <p>Login succeeded but no session was returned</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                    return;
+                }
+
+                console.log('✅ Login successful!');
+                console.log('User:', data.user.email);
+                console.log('Session expires at:', new Date(data.session.expires_at * 1000));
+
+                // Check localStorage after login
+                console.log('localStorage after login:', Object.keys(localStorage));
+                
+                // Try to get session again
+                const { data: { session: verifySession }, error: verifyError } = await supabase.auth.getSession();
+                console.log('Session verification:', { verifySession, verifyError });
+
+                resultsDiv.innerHTML = `
+                    <div class="status success">
+                        <h3>✅ Login Successful!</h3>
+                        <p><strong>Email:</strong> ${data.user.email}</p>
+                        <p><strong>User ID:</strong> ${data.user.id}</p>
+                        <p><strong>Session expires:</strong> ${new Date(data.session.expires_at * 1000).toLocaleString()}</p>
+                        <p><strong>Session verified:</strong> ${verifySession ? '✅ Yes' : '❌ No'}</p>
+                        <p><strong>Storage keys:</strong> ${Object.keys(localStorage).filter(k => k.includes('sb-')).join(', ') || 'None'}</p>
+                    </div>
+                    <div class="status">
+                        <h3>Full Response:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+
+                // Update client status
+                await displayClientStatus();
+
+            } catch (err) {
+                console.error('Exception during login:', err);
+                resultsDiv.innerHTML = `
+                    <div class="status error">
+                        <h3>❌ Exception</h3>
+                        <pre>${err.message}\n${err.stack}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        function clearAll() {
+            console.log('Clearing all storage...');
+            localStorage.clear();
+            sessionStorage.clear();
+            console.log('Storage cleared');
+            displayClientStatus();
+            document.getElementById('results').innerHTML = '<div class="status success">Storage cleared!</div>';
+        }
+
+        // Initial display
+        displayClientStatus();
+
+        // Listen for auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state change:', event, session);
+            displayClientStatus();
+        });
+    </script>
+</body>
+</html>

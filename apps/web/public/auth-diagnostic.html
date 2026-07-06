@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth Diagnostic Tool</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #06b6d4;
+      border-bottom: 2px solid #06b6d4;
+      padding-bottom: 10px;
+    }
+    .section {
+      background: #334155;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border-left: 4px solid #06b6d4;
+    }
+    .success { color: #10b981; }
+    .error { color: #ef4444; }
+    .warning { color: #f59e0b; }
+    .info { color: #06b6d4; }
+    button {
+      background: #06b6d4;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 10px 10px 0;
+    }
+    button:hover {
+      background: #0891b2;
+    }
+    pre {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      border: 1px solid #475569;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .status-pass {
+      background: #10b981;
+      color: white;
+    }
+    .status-fail {
+      background: #ef4444;
+      color: white;
+    }
+    .loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Authentication Diagnostic Tool</h1>
+  
+  <div class="section">
+    <h2>Quick Actions</h2>
+    <button onclick="runFullDiagnostic()">🔍 Run Full Diagnostic</button>
+    <button onclick="clearAllData()">🗑️ Clear All Auth Data</button>
+    <button onclick="testSupabaseConnection()">🔌 Test Supabase Connection</button>
+    <button onclick="checkSession()">👤 Check Current Session</button>
+  </div>
+
+  <div id="results"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    
+    const SUPABASE_URL = 'https://cooyzjomljshbudjnnkf.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvb3l6am9tbGpzaGJ1ZGpubmtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2ODgyMjAsImV4cCI6MjA3NjI2NDIyMH0.dmeXTX2p_UWXOoPyl9pKIQZ8GLjBA6KWXPaeZFww7cs';
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    window.supabase = supabase;
+
+    function addResult(title, content, status = 'info') {
+      const results = document.getElementById('results');
+      const section = document.createElement('div');
+      section.className = 'section';
+      
+      const statusBadge = status === 'pass' ? '<span class="status-badge status-pass">✅ PASS</span>' :
+                         status === 'fail' ? '<span class="status-badge status-fail">❌ FAIL</span>' : '';
+      
+      section.innerHTML = `
+        <h3>${title} ${statusBadge}</h3>
+        <pre class="${status}">${content}</pre>
+      `;
+      results.appendChild(section);
+    }
+
+    function clearResults() {
+      document.getElementById('results').innerHTML = '';
+    }
+
+    window.runFullDiagnostic = async function() {
+      clearResults();
+      addResult('Starting Full Diagnostic...', 'Running all checks...', 'info');
+      
+      // 1. Environment Check
+      try {
+        const envCheck = `Supabase URL: ${SUPABASE_URL ? '✅ Set' : '❌ Missing'}
+Supabase Key: ${SUPABASE_KEY ? '✅ Set (length: ' + SUPABASE_KEY.length + ')' : '❌ Missing'}`;
+        addResult('1. Environment Variables', envCheck, SUPABASE_URL && SUPABASE_KEY ? 'pass' : 'fail');
+      } catch (e) {
+        addResult('1. Environment Variables', '❌ Error: ' + e.message, 'fail');
+      }
+
+      // 2. LocalStorage Check
+      try {
+        const allKeys = Object.keys(localStorage);
+        const supabaseKeys = allKeys.filter(k => k.includes('supabase') || k.includes('sb-'));
+        const lsCheck = `Total localStorage keys: ${allKeys.length}
+Supabase keys: ${supabaseKeys.length}
+Keys: ${supabaseKeys.join(', ') || 'None'}`;
+        addResult('2. LocalStorage', lsCheck, 'info');
+      } catch (e) {
+        addResult('2. LocalStorage', '❌ Error: ' + e.message, 'fail');
+      }
+
+      // 3. Session Check
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        const sessionCheck = `Status: ${session ? '✅ Logged In' : '❌ Not Logged In'}
+User Email: ${session?.user?.email || 'None'}
+User ID: ${session?.user?.id || 'None'}
+Session Expires: ${session ? new Date(session.expires_at * 1000).toLocaleString() : 'N/A'}
+Error: ${error ? error.message : 'None'}`;
+        addResult('3. Current Session', sessionCheck, session ? 'pass' : 'fail');
+      } catch (e) {
+        addResult('3. Current Session', '❌ Error: ' + e.message, 'fail');
+      }
+
+      // 4. Cookies Check
+      try {
+        const cookies = document.cookie.split(';').map(c => c.trim());
+        const sbCookies = cookies.filter(c => c.includes('sb-') || c.includes('supabase'));
+        const cookieCheck = `Total cookies: ${cookies.length}
+Supabase cookies: ${sbCookies.length}
+Cookies: ${sbCookies.join('\n') || 'None'}`;
+        addResult('4. Cookies', cookieCheck, 'info');
+      } catch (e) {
+        addResult('4. Cookies', '❌ Error: ' + e.message, 'fail');
+      }
+
+      // 5. Connection Test
+      try {
+        const { data, error } = await supabase.from('profiles').select('count');
+        const connCheck = `Connection: ${!error ? '✅ Connected' : '❌ Failed'}
+Error: ${error ? error.message : 'None'}
+Can query profiles table: ${!error ? 'Yes' : 'No'}`;
+        addResult('5. Supabase Connection', connCheck, !error ? 'pass' : 'fail');
+      } catch (e) {
+        addResult('5. Supabase Connection', '❌ Error: ' + e.message, 'fail');
+      }
+
+      addResult('✅ Diagnostic Complete', 'Check results above', 'pass');
+    };
+
+    window.clearAllData = function() {
+      if (confirm('This will clear all localStorage, sessionStorage, and cookies. Continue?')) {
+        // Clear localStorage
+        const lsKeys = Object.keys(localStorage);
+        lsKeys.forEach(key => localStorage.removeItem(key));
+        
+        // Clear sessionStorage
+        sessionStorage.clear();
+        
+        // Clear cookies
+        document.cookie.split(";").forEach(c => {
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+        
+        alert('✅ All data cleared! Page will reload.');
+        location.reload();
+      }
+    };
+
+    window.testSupabaseConnection = async function() {
+      clearResults();
+      addResult('Testing Supabase Connection...', 'Please wait...', 'info');
+      
+      try {
+        // Test 1: Ping
+        const { data, error } = await supabase.from('profiles').select('count');
+        addResult('Connection Test', 
+          `Status: ${!error ? '✅ Success' : '❌ Failed'}\nError: ${error ? error.message : 'None'}`,
+          !error ? 'pass' : 'fail'
+        );
+
+        // Test 2: Auth endpoint
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        addResult('Auth Endpoint Test',
+          `Status: ${!authError ? '✅ Reachable' : '❌ Failed'}\nError: ${authError ? authError.message : 'None'}\nUser: ${user ? user.email : 'Not logged in'}`,
+          !authError ? 'pass' : 'fail'
+        );
+      } catch (e) {
+        addResult('Connection Test Error', e.message, 'fail');
+      }
+    };
+
+    window.checkSession = async function() {
+      clearResults();
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        const sessionInfo = `
+=== SESSION INFO ===
+Logged In: ${session ? '✅ YES' : '❌ NO'}
+Email: ${session?.user?.email || 'None'}
+User ID: ${session?.user?.id || 'None'}
+Role: ${session?.user?.user_metadata?.role || 'None'}
+Full Name: ${session?.user?.user_metadata?.full_name || 'None'}
+Created: ${session?.user?.created_at ? new Date(session.user.created_at).toLocaleString() : 'N/A'}
+Session Expires: ${session?.expires_at ? new Date(session.expires_at * 1000).toLocaleString() : 'N/A'}
+
+=== USER INFO ===
+User Object: ${user ? '✅ Available' : '❌ None'}
+Email Confirmed: ${user?.email_confirmed_at ? '✅ YES' : '❌ NO'}
+Phone Confirmed: ${user?.phone_confirmed_at ? '✅ YES' : '❌ NO'}
+
+=== ERRORS ===
+Session Error: ${error ? error.message : 'None'}
+User Error: ${userError ? userError.message : 'None'}
+        `;
+        
+        addResult('Current Session', sessionInfo, session ? 'pass' : 'fail');
+      } catch (e) {
+        addResult('Session Check Error', e.message, 'fail');
+      }
+    };
+
+    // Auto-run on load
+    console.log('🔍 Auth Diagnostic Tool Loaded');
+    console.log('Available functions: runFullDiagnostic(), clearAllData(), testSupabaseConnection(), checkSession()');
+  </script>
+</body>
+</html>

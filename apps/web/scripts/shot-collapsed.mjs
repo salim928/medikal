@@ -1,0 +1,10 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 1000 } });
+await ctx.addCookies([{ name: "mc-demo", value: "doctor", url: "http://localhost:3011" }]);
+await ctx.addInitScript(() => localStorage.setItem("mc-sidebar-collapsed", "1"));
+const p = await ctx.newPage();
+await p.goto("http://localhost:3011/dashboard/doctor", { waitUntil: "networkidle", timeout: 90000 });
+await p.waitForTimeout(1500);
+await p.screenshot({ path: "D:/DSProjects/aids/medicom/sidebar-collapsed.png" });
+await b.close(); console.log("ok");

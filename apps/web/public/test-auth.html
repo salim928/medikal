@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase Auth Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    h1 { color: #06b6d4; }
+    .section {
+      background: #1e293b;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 14px;
+    }
+    button {
+      background: #06b6d4;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 8px 8px 8px 0;
+    }
+    button:hover {
+      background: #0891b2;
+    }
+    button:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
+    .success { color: #10b981; }
+    .error { color: #ef4444; }
+    .info { color: #06b6d4; }
+    .warning { color: #f59e0b; }
+    pre {
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      border: 1px solid #334155;
+      font-size: 12px;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .status-dot.green { background: #10b981; }
+    .status-dot.red { background: #ef4444; }
+    .status-dot.yellow { background: #f59e0b; }
+  </style>
+</head>
+<body>
+  <h1>🔐 Supabase Authentication Tester</h1>
+  
+  <div class="section">
+    <h2>📋 Configuration Status</h2>
+    <div id="config-status">Checking...</div>
+  </div>
+
+  <div class="section">
+    <h2>🧪 Test Login</h2>
+    <input type="email" id="email" placeholder="Email" value="salimadams49@gmail.com">
+    <input type="password" id="password" placeholder="Password" value="">
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testSignup()">Test Signup</button>
+    <button onclick="checkSession()">Check Session</button>
+    <button onclick="clearAll()">Clear All Data</button>
+    <button onclick="checkUserInDB()" style="background: #8b5cf6;">Check User in DB</button>
+    <div id="login-result" style="margin-top: 15px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>📦 LocalStorage Contents</h2>
+    <pre id="storage-contents">Click "Check Session" to view</pre>
+  </div>
+
+  <div class="section">
+    <h2>🔍 Session Details</h2>
+    <pre id="session-details">Click "Check Session" to view</pre>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://cooyzjomljshbudjnnkf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvb3l6am9tbGpzaGJ1ZGpubmtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2ODgyMjAsImV4cCI6MjA3NjI2NDIyMH0.dmeXTX2p_UWXOoPyl9pKIQZ8GLjBA6KWXPaeZFww7cs';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storage: window.localStorage,
+        flowType: 'pkce',
+      }
+    });
+
+    function log(elementId, message, type = 'info') {
+      const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        info: '#06b6d4',
+        warning: '#f59e0b'
+      };
+      document.getElementById(elementId).innerHTML = `<span style="color: ${colors[type]}">${message}</span>`;
+    }
+
+    async function checkConfig() {
+      let status = '<div>';
+      
+      // Check Supabase connection
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        status += '<div><span class="status-dot green"></span> <strong>Supabase Connection:</strong> ✅ Connected</div>';
+      } catch (e) {
+        status += '<div><span class="status-dot red"></span> <strong>Supabase Connection:</strong> ❌ Failed</div>';
+      }
+
+      // Check localStorage
+      const hasLocalStorage = typeof window !== 'undefined' && window.localStorage;
+      status += `<div><span class="status-dot ${hasLocalStorage ? 'green' : 'red'}"></span> <strong>LocalStorage:</strong> ${hasLocalStorage ? '✅ Available' : '❌ Not Available'}</div>`;
+
+      // Check for existing session
+      const { data: { session } } = await supabase.auth.getSession();
+      status += `<div><span class="status-dot ${session ? 'green' : 'yellow'}"></span> <strong>Active Session:</strong> ${session ? '✅ Logged in as ' + session.user.email : '⚠️ Not logged in'}</div>`;
+
+      status += '</div>';
+      document.getElementById('config-status').innerHTML = status;
+    }
+
+    async function testLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      log('login-result', '🔄 Attempting login...', 'info');
+
+      try {
+        // First, sign out any existing session
+        await supabase.auth.signOut();
+        console.log('Signed out existing session');
+        
+        // Wait a moment for cleanup
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          log('login-result', `❌ Login failed: ${error.message}<br><br>` +
+            `<strong>Possible reasons:</strong><br>` +
+            `• Wrong password<br>` +
+            `• Email not confirmed (check Supabase Dashboard)<br>` +
+            `• Account doesn't exist<br><br>` +
+            `<strong>Debug info:</strong><br>` +
+            `Error code: ${error.status || 'unknown'}<br>` +
+            `Error name: ${error.name || 'unknown'}`, 'error');
+          console.error('Full error object:', error);
+          return;
+        }
+
+        log('login-result', `✅ Login successful! User: ${data.user.email}`, 'success');
+        await checkSession();
+        await checkConfig();
+      } catch (e) {
+        log('login-result', `❌ Error: ${e.message}`, 'error');
+        console.error('Exception:', e);
+      }
+    }
+
+    async function testSignup() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      log('login-result', '🔄 Attempting signup...', 'info');
+
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              role: 'patient',
+              full_name: 'Test User'
+            }
+          }
+        });
+
+        if (error) {
+          log('login-result', `❌ Signup failed: ${error.message}`, 'error');
+          return;
+        }
+
+        if (data.user && !data.session) {
+          log('login-result', `⚠️ Signup succeeded but email confirmation is required!<br><br>` +
+            `To fix: Go to Supabase Dashboard → Auth → Providers → Email → Disable "Enable email confirmations"`, 'warning');
+          return;
+        }
+
+        log('login-result', `✅ Signup successful! User: ${data.user.email}`, 'success');
+        await checkSession();
+        await checkConfig();
+      } catch (e) {
+        log('login-result', `❌ Error: ${e.message}`, 'error');
+      }
+    }
+
+    async function checkSession() {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        // Show localStorage contents
+        const storageKeys = Object.keys(localStorage).filter(k => k.includes('sb-'));
+        const storageInfo = storageKeys.map(key => {
+          const value = localStorage.getItem(key);
+          try {
+            return `${key}:\n${JSON.stringify(JSON.parse(value), null, 2)}`;
+          } catch {
+            return `${key}: ${value}`;
+          }
+        }).join('\n\n');
+
+        document.getElementById('storage-contents').textContent = 
+          storageInfo || 'No Supabase data in localStorage';
+
+        // Show session details
+        if (session) {
+          document.getElementById('session-details').textContent = 
+            JSON.stringify({
+              user: {
+                id: session.user.id,
+                email: session.user.email,
+                created_at: session.user.created_at,
+                role: session.user.user_metadata?.role
+              },
+              expires_at: new Date(session.expires_at * 1000).toLocaleString(),
+              access_token: session.access_token.substring(0, 50) + '...'
+            }, null, 2);
+        } else {
+          document.getElementById('session-details').textContent = 'No active session';
+        }
+
+        await checkConfig();
+      } catch (e) {
+        document.getElementById('session-details').textContent = `Error: ${e.message}`;
+      }
+    }
+
+    function clearAll() {
+      if (confirm('Clear all localStorage data and sign out?')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        supabase.auth.signOut();
+        location.reload();
+      }
+    }
+
+    async function checkUserInDB() {
+      const email = document.getElementById('email').value;
+      
+      log('login-result', '🔍 Checking if user exists in database...', 'info');
+      
+      try {
+        // Try to trigger password reset to see if user exists
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: 'http://localhost:3000/reset-password'
+        });
+        
+        if (error) {
+          log('login-result', `⚠️ Cannot verify user: ${error.message}`, 'warning');
+        } else {
+          log('login-result', `✅ User exists! Password reset email would be sent to ${email}<br><br>` +
+            `<strong>This means the account is valid.</strong><br><br>` +
+            `If login still fails, the password might be wrong.<br><br>` +
+            `<strong>Try:</strong><br>` +
+            `1. Use the actual password you set during signup<br>` +
+            `2. Or create a new test account with "Test Signup"`, 'success');
+        }
+      } catch (e) {
+        log('login-result', `❌ Error: ${e.message}`, 'error');
+      }
+    }
+
+    // Check config on load
+    checkConfig();
+    checkSession();
+  </script>
+</body>
+</html>
