@@ -23,5 +23,6 @@ export default defineConfig({
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
+    timeout: 180_000, // cold Turbopack start can exceed the 60s default
   },
 });

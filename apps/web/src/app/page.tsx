@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { MarketingNav, MarketingFooter } from "@/components/marketing/shell";
 import {
   ArrowRight, Play, Video, Pill, FlaskConical, HeartPulse, ShieldCheck, Clock,
   Brain, User, Baby, Activity, PlusCircle, Check, Star, ChevronLeft,
   ChevronRight, MapPin, DollarSign, Lock, Smartphone, Phone, MessageSquare,
-  ClipboardList, Users, Facebook, Twitter, Instagram, Linkedin, Youtube,
-} from "lucide-react";
+  ClipboardList, Users, } from "lucide-react";
 
 /* Real imagery (verified reachable). */
 const IMG = {
@@ -17,39 +17,7 @@ const AVATARS = [
   "https://randomuser.me/api/portraits/women/68.jpg",
 ];
 
-/* ------------------------------- Logo ---------------------------------- */
-function Logo({ light = false }: { light?: boolean }) {
-  return (
-    <span className="flex items-center gap-2">
-      <svg viewBox="0 0 24 24" className={`h-7 w-7 ${light ? "text-white" : "text-brand-600"}`} fill="currentColor" aria-hidden>
-        <rect x="9.4" y="2.6" width="5.2" height="18.8" rx="2.4" />
-        <rect x="2.6" y="9.4" width="18.8" height="5.2" rx="2.4" />
-      </svg>
-      <span className={`font-display text-xl font-bold tracking-tight ${light ? "text-white" : "text-slate-900"}`}>medicom</span>
-    </span>
-  );
-}
 
-/* -------------------------------- Nav ---------------------------------- */
-function NavBar() {
-  const links = ["How It Works", "Services", "Our Doctors", "Pricing", "For Business", "Resources"];
-  return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/"><Logo /></Link>
-        <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 lg:flex">
-          {links.map((l) => (
-            <a key={l} href="#" className="transition hover:text-slate-900">{l}</a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="hidden text-sm font-semibold text-slate-700 transition hover:text-slate-900 sm:block">Log in</Link>
-          <Link href="/signup" className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">Get Started</Link>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 /* -------------------------------- Hero --------------------------------- */
 function Hero() {
@@ -375,54 +343,12 @@ function Insurance() {
   );
 }
 
-/* ------------------------------- Footer -------------------------------- */
-function Footer() {
-  const cols = [
-    { h: "Company", items: ["About Us", "Careers", "Press", "Contact Us", "Blog"] },
-    { h: "Services", items: ["Urgent Care", "Mental Health", "Primary Care", "Pediatrics", "Chronic Care"] },
-    { h: "Resources", items: ["Help Center", "Patient Guide", "Insurance", "FAQ", "Health Articles"] },
-    { h: "For Business", items: ["Employer Solutions", "Health Plans", "Partner With Us", "API & Developers"] },
-  ];
-  return (
-    <footer className="bg-brand-700 text-white">
-      <div className="container grid gap-10 py-16 md:grid-cols-5">
-        <div className="md:col-span-1">
-          <Logo light />
-          <p className="mt-4 max-w-xs text-sm text-brand-100">Making quality healthcare accessible, convenient, and personal for everyone.</p>
-          <div className="mt-5 flex gap-3">
-            {[Facebook, Twitter, Instagram, Linkedin, Youtube].map((Icon, i) => (
-              <a key={i} href="#" className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"><Icon className="h-4 w-4" /></a>
-            ))}
-          </div>
-        </div>
-        {cols.map((c) => (
-          <div key={c.h}>
-            <h4 className="font-display text-sm font-semibold uppercase tracking-wide text-white">{c.h}</h4>
-            <ul className="mt-4 space-y-2.5 text-sm text-brand-100">
-              {c.items.map((i) => (<li key={i}><a href="#" className="transition hover:text-white">{i}</a></li>))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div className="border-t border-white/10">
-        <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm text-brand-100 sm:flex-row">
-          <p>© {new Date().getFullYear()} medicom. All rights reserved.</p>
-          <p className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4" /> HIPAA Compliant</span>
-            <a href="#" className="hover:text-white">Privacy Policy</a>
-            <a href="#" className="hover:text-white">Terms of Service</a>
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
-}
 
 /* -------------------------------- Page --------------------------------- */
 export default function LandingPage() {
   return (
     <main className="bg-white text-slate-900">
-      <NavBar />
+      <MarketingNav />
       <Hero />
       <Services />
       <HowItWorks />
@@ -431,7 +357,7 @@ export default function LandingPage() {
       <AppSection />
       <Testimonials />
       <Insurance />
-      <Footer />
+      <MarketingFooter />
     </main>
   );
 }

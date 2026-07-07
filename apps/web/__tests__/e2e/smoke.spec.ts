@@ -31,6 +31,53 @@ test.describe("public pages", () => {
     await assertHealthy(page, "/privacy", /Privacy/i);
     await assertHealthy(page, "/terms", /Terms/i);
   });
+
+  const marketingRoutes: [string, string | RegExp][] = [
+    ["/about", /Healthcare that meets you/i],
+    ["/careers", /Open roles/i],
+    ["/press", /medicom in the news/i],
+    ["/contact", /We're here to help/i],
+    ["/blog", /News from medicom/i],
+    ["/articles", /Health guidance/i],
+    ["/services", /Care for every stage of life/i],
+    ["/services/urgent-care", /Urgent Care/],
+    ["/services/mental-health", /Mental Health/],
+    ["/services/primary-care", /Primary Care/],
+    ["/services/pediatrics", /Pediatrics/],
+    ["/services/chronic-care", /Chronic Care/],
+    ["/faq", /Frequently asked questions/i],
+    ["/insurance", /health cover/i],
+    ["/patient-guide", /step by step/i],
+    ["/business/employers", /Employer Solutions/],
+    ["/business/health-plans", /Health Plans/],
+    ["/business/partners", /Partner With Us/],
+  ];
+  for (const [path, marker] of marketingRoutes) {
+    test(`marketing page ${path} renders`, async ({ page }) => {
+      await assertHealthy(page, path, marker);
+    });
+  }
+
+  test("unknown service slug shows not-found page", async ({ page }) => {
+    await page.goto("/services/nope");
+    await expect(page.getByText(/404|not found|doesn't exist/i).first()).toBeVisible({ timeout: 15000 });
+  });
+
+  test("contact form submits with toast", async ({ page }) => {
+    await page.goto("/contact");
+    await page.fill("#name", "Test Person");
+    await page.fill("#email", "test@example.com");
+    await page.fill("#message", "Hello from the smoke suite");
+    await page.click('button:has-text("Send message")');
+    await expect(page.getByText(/Message sent/).first()).toBeVisible();
+  });
+
+  test("footer links resolve from landing", async ({ page }) => {
+    await page.goto("/");
+    await page.locator('footer a:has-text("About Us")').click();
+    await page.waitForURL("**/about");
+    await expect(page.getByText(/Healthcare that meets you/i).first()).toBeVisible();
+  });
 });
 
 test.describe("patient routes", () => {

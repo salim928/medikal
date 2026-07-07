@@ -55,6 +55,14 @@ apps/web
 - **Demo:** an `mc-demo=<role>` cookie set by the login page. `proxy.ts` and `useAuth` honor it with zero network calls.
 - **Real:** configure `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `apps/web/.env.example`) and the same code paths switch to Supabase SSR sessions.
 
+### Public site
+
+Beyond the app, a full marketing site ships in the `(marketing)` route group, sharing one
+nav/footer shell (`components/marketing/shell.tsx`) with content in `lib/marketing.ts`:
+About, Careers, Press, Contact, Blog, Health Articles, Services (index + 5 detail pages),
+FAQ, Insurance, Patient Guide, Help Center, and three For-Business pages
+(Employers, Health Plans, Partners). Every footer link resolves.
+
 ### Payments
 
 Stripe and Paystack integrations exist and initialize lazily — API routes return 503 until keys are configured, so builds and demo deployments never break.
